@@ -12,19 +12,33 @@ $line_break\
 $python\
 $character"""
 
+[username]
+format = "[$user]($style)"
+style_user = "#a89984"
+style_root = "#ea6962"
+
 [hostname]
 format = "[@$hostname]($style) "
 ssh_only = true
+style = "#d3869b"
 
 [directory]
+style = "#7c6f64"
 truncation_length = 0
 truncate_to_repo = false
 
+[character]
+success_symbol = "[>](#d3869b)"
+error_symbol = "[>](#ea6962)"
+vimcmd_symbol = "[<](#d3869b)"
+
 [git_branch]
 format = "[$branch]($style)"
+style = "#a89984"
 
 [git_status]
-format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)]($style) ($ahead_behind )($stashed)]($style) "
+format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](#a89984) ($ahead_behind )([$stashed](#72966c))]($style) "
+style = "#d3869b"
 conflicted = "​"
 untracked = "​"
 modified = "​"
@@ -36,10 +50,16 @@ ahead = "↑"
 behind = "↓"
 diverged = "↓↑"
 
+[git_state]
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+style = "#a89984"
+
 [cmd_duration]
 format = "[$duration]($style) "
+style = "#d8a657"
 
 [python]
 format = "[$virtualenv]($style) "
+style = "#a89984"
 detect_extensions = []
 detect_files = []

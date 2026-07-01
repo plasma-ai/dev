@@ -6,6 +6,7 @@
     "workbench.tree.indent": 12,
     "workbench.editor.empty.hint": "hidden",
     "workbench.activityBar.location": "default",
+    "workbench.colorTheme": "Gruvbox Material Modern - Medium",
     "files.autoSave": "afterDelay",
     "files.trimTrailingWhitespace": true,
     "diffEditor.ignoreTrimWhitespace": false,
