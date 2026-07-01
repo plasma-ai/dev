@@ -1,0 +1,40 @@
+[
+    {
+        "key": "cmd+i",
+        "command": "composerMode.agent"
+    },
+    {
+        "key": "cmd+0",
+        "command": "workbench.explorer.fileView.focus"
+    },
+    {
+        "key": "cmd+y",
+        "command": "workbench.action.terminal.focus",
+        "when": "editorFocus"
+    },
+    {
+        "key": "cmd+y",
+        "command": "workbench.action.focusActiveEditorGroup",
+        "when": "terminalFocus"
+    },
+    {
+        "key": "shift+cmd+l",
+        "command": "editor.action.selectHighlights",
+        "when": "editorFocus"
+    },
+    {
+        "key": "shift+cmd+l",
+        "command": "-editor.action.selectHighlights",
+        "when": "editorFocus"
+    },
+    {
+        "key": "shift+cmd+l",
+        "command": "notebook.selectAllFindMatches",
+        "when": "config.notebook.multiCursor.enabled && notebookFindWidgetFocused || config.notebook.multiCursor.enabled && notebookCellEditorFocused && activeEditor == 'workbench.editor.notebook'"
+    },
+    {
+        "key": "shift+cmd+l",
+        "command": "-notebook.selectAllFindMatches",
+        "when": "config.notebook.multiCursor.enabled && notebookFindWidgetFocused || config.notebook.multiCursor.enabled && notebookCellEditorFocused && activeEditor == 'workbench.editor.notebook'"
+    }
+]

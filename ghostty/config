@@ -1,0 +1,25 @@
+# Ghostty config
+
+# ------ Font ------
+font-size = 12
+
+# ------ Window ------
+window-width = 80
+window-height = 25
+window-padding-x = 10
+window-padding-y = 8
+macos-titlebar-proxy-icon = hidden
+macos-titlebar-style = tabs
+
+# ------ Cursor ------
+cursor-style = block
+cursor-style-blink = false
+shell-integration-features = no-cursor
+
+# ------ Keyboard ------
+macos-option-as-alt = true
+
+# ------ Behavior ------
+copy-on-select = clipboard
+confirm-close-surface = false
+bell-features = no-system,no-audio,no-attention,no-title,no-border

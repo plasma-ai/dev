@@ -1,0 +1,15 @@
+# https://developers.openai.com/codex/config-reference
+
+model_reasoning_effort = "high"
+plan_mode_reasoning_effort = "high"
+personality = "pragmatic"
+sandbox_mode = "danger-full-access"
+file_opener = "cursor"
+
+[features]
+goals = true
+fast_mode = true
+memories = false
+
+[analytics]
+enabled = false

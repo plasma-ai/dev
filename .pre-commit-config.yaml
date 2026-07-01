@@ -1,0 +1,37 @@
+# https://pre-commit.com
+
+repos:
+  - repo: local
+    hooks:
+      - id: reject-external-symlinks
+        name: reject symlinks that point outside the repo
+        entry: scripts/reject-external-symlinks.sh
+        language: script
+        types: [symlink]
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.13.1-1
+    hooks:
+      - id: shfmt
+        exclude: ^zsh/ # zsh config, not bash
+        args:
+          - -w
+          - -i=4
+          - -ci
+          - -bn
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+        exclude: ^zsh/ # zsh config, not bash
+  - repo: https://github.com/hukkin/mdformat
+    rev: 1.0.0
+    hooks:
+      - id: mdformat
+        additional_dependencies:
+          - mdformat-gfm
+          - mdformat-gfm-alerts
+          - mdformat-frontmatter
+        args:
+          - --wrap
+          - "72"
+          - --number

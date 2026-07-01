@@ -1,0 +1,18 @@
+{
+  "name": "yaml-doc",
+  "displayName": "YAML Docstring",
+  "description": "YAML syntax highlighting inside --- delimited blocks in Python docstrings",
+  "version": "0.1.0",
+  "engines": {"vscode": "^1.60.0"},
+  "categories": ["Programming Languages"],
+  "contributes": {
+    "grammars": [
+      {
+        "scopeName": "inline-yaml.injection",
+        "path": "./syntaxes/yaml-injection.tmLanguage.json",
+        "injectTo": ["source.python"],
+        "embeddedLanguages": {"meta.embedded.block.yaml": "yaml"}
+      }
+    ]
+  }
+}

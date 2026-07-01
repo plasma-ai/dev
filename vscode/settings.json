@@ -1,0 +1,84 @@
+{
+    // General
+    "window.commandCenter": true,
+    "editor.minimap.enabled": false,
+    "editor.inlayHints.enabled": "off",
+    "workbench.tree.indent": 12,
+    "workbench.editor.empty.hint": "hidden",
+    "workbench.activityBar.location": "default",
+    "files.autoSave": "afterDelay",
+    "files.trimTrailingWhitespace": true,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "files.exclude": {
+        "**/__pycache__": true
+    },
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter-notebook",
+        "*.pdf": "latex-workshop-pdf-hook"
+    },
+    // Telemetry
+    "telemetry.telemetryLevel": "off",
+    // Git
+    "git.autofetch": true,
+    "git.autoRepositoryDetection": "subFolders",
+    "git.repositoryScanMaxDepth": 1,
+    // GitHub
+    "githubPullRequests.pullBranch": "never",
+    // Extensions
+    "extensions.autoUpdate": "on",
+    // Spelling
+    "cSpell.language": "en,en-US",
+    "cSpell.enabledFileTypes": {
+        "*": false,
+        "plaintext": true,
+        "markdown": true,
+        "latex": true
+    },
+    // Python
+    "python.languageServer": "Pylance",
+    "python.analysis.autoImportCompletions": false,
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportInvalidTypeForm": "none"
+    },
+    "autoDocstring.docstringFormat": "google",
+    "autoDocstring.generateDocstringOnEnter": true,
+    "autoDocstring.includeExtendedSummary": true,
+    "autoDocstring.guessTypes": true,
+    // LaTeX
+    "latex-workshop.view.pdf.viewer": "tab",
+    "latex-workshop.latex.autoBuild.run": "never",
+    "latex-workshop.latex.autoClean.run": "onBuilt",
+    "latex-workshop.latex.clean.method": "glob",
+    "latex-workshop.latex.clean.subfolder.enabled": true,
+    "latex-workshop.latex.clean.fileTypes": [
+        "*.aux",
+        "*.bbl",
+        "*.blg",
+        "*.idx",
+        "*.ind",
+        "*.lof",
+        "*.lot",
+        "*.out",
+        "*.toc",
+        "*.acn",
+        "*.acr",
+        "*.alg",
+        "*.glg",
+        "*.glo",
+        "*.gls",
+        "*.fls",
+        "*.log",
+        "*.fdb_latexmk",
+        "*.snm",
+        "*.synctex",
+        "*.synctex(busy)",
+        "*.synctex.gz",
+        "*.synctex.gz(busy)",
+        "*.nav",
+        "*.vrb",
+        "*Notes.bib"
+    ],
+    "[latex]": {
+        "editor.wordWrap": "on"
+    }
+}

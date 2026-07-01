@@ -1,0 +1,14 @@
+{
+  "scopeName": "inline-yaml.injection",
+  "injectionSelector": "R:string.quoted.multi.python, R:string.quoted.docstring.multi.python",
+  "patterns": [
+    {
+      "begin": "(-{3})[ \\t]*\\n",
+      "end": "(-{3})(?=[ \\t]*\\n)",
+      "beginCaptures": {"1": {"name": "punctuation.definition.block.yaml.begin"}},
+      "endCaptures": {"1": {"name": "punctuation.definition.block.yaml.end"}},
+      "contentName": "meta.embedded.block.yaml",
+      "patterns": [{"include": "source.yaml"}]
+    }
+  ]
+}
