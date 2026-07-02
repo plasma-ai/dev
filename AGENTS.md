@@ -1,7 +1,10 @@
 # AGENTS
 
 This file provides guidance to coding agents (Claude Code, Codex) when
-working with code in this organization.
+working with code in this organization. It is the org-wide root file —
+every repository under the org loads it alongside its own `AGENTS.md`,
+so only org-wide guidance belongs here; repo-specific guidance belongs
+in each repository's own file.
 
 ## Workflow
 
@@ -22,10 +25,10 @@ working with code in this organization.
 - **Exception for fractal.** When running the `/fractal` skill or
   operating a fractal node, commit fractal's own setup/seed/config
   artifacts autonomously and without asking — `fractal init`'s output
-  (`.fractal/`, `wiki/`), the node seed, the
-  `fractal commit "configure <name>" --init` baseline, and child config
-  commits. Never ask the user whether to commit them. Ordinary project
-  work in the user's main worktree still follows the rules above.
+  (`.fractal/` and the wiki scaffold it creates), the node seed, and the
+  baseline and child config commits the fractal skill instructs you to
+  make. Never ask the user whether to commit them. Ordinary project work
+  in the user's main worktree still follows the rules above.
 
 ### Plan Files
 
@@ -41,14 +44,16 @@ plan <short_descriptive_name> <agent>
   optional trailing `-v{version}` (e.g. `refactor_node_events`,
   `refactor_node_events-v2`); `<agent>` is `Claude` or `Codex`. The
   command prints the created path
-  (`$PLANS_DIR/<ISO 8601 UTC timestamp>-<name>.md`) -- write your plan
+  (`$PLANS_DIR/<ISO 8601 UTC timestamp>-<name>.md`) — write your plan
   into that file. Do not hand-compute timestamps or use the
   auto-generated plan-mode filename.
 - `$PLANS_DIR` defaults to the `scratch/plans` directory beside the
-  `dev` repo; override it to point plans elsewhere.
-- The command seeds the file with the title on line 1 and
-  `Written by: <agent>` on line 3. Plans from all agents share
-  `$PLANS_DIR`.
+  `dev` repo; override it to point plans elsewhere. Plans from all
+  agents share `$PLANS_DIR`.
+- The command seeds the file with a title and author header. The seeded
+  title is just the name with underscores turned into spaces — rewrite
+  it into a proper descriptive title (e.g.
+  `# Refactor Node Event Handling`).
 
 If a plan is substantially modified later on, create a new version with
 a `-v{version}` suffix (e.g. `plan refactor_node_events-v2 Claude`). For
@@ -96,15 +101,17 @@ When writing or modifying code:
    not preservation of the status quo. Consistently good beats
    consistently bad, so make the case for why a change is worth the
    churn and the user will adopt it.
-3. **Do not rename variables** that shadow outer scopes, reformat
-   existing comments, reorder methods, or restructure working code
-   unless specifically asked.
-4. **Do not remove comments.** Line-by-line comments are intentional —
-   they help the user maintain order and scan code quickly. Emulate them
-   in new code.
-5. **When in doubt, emulate.** Find the nearest analogous code in the
+3. **Do not rename variables** that shadow outer scopes if it is
+   sensible to reuse that variable name (and is unlikely to become a
+   bug).
+4. **Do not reformat** existing comments, reorder methods, or
+   restructure working code unless specifically asked.
+5. **Do not remove comments.** Line-by-line comments are intentional —
+   they help the user maintain order and scan code quickly. Emulate
+   existing comment patterns in new code.
+6. **When in doubt, emulate.** Find the nearest analogous code in the
    codebase and mirror its structure.
-6. **Preserve trailing newline patterns.** If a file ends with a
+7. **Preserve trailing newline patterns.** If a file ends with a
    trailing newline, keep it. If a file ends without one, don't add one.
    Match whatever the file already does.
 
@@ -129,10 +136,14 @@ just accelerate your ramp-up.
   find a few analogous examples in the codebase and mirror their
   structure. This applies to everything: error handling shape, docstring
   phrasing, test organization, import style, comment density.
-- **Keep this file up to date.** When you discover conventions or
+- **Keep these docs up to date.** When you discover conventions or
   patterns through the user's feedback or codebase observation that
-  aren't yet documented here, add them to the appropriate section of
-  this file.
+  aren't yet documented, add them to the appropriate `AGENTS.md`:
+  repo-specific conventions belong in the repo's own file; org-wide
+  conventions belong in the shared sections, which are maintained at the
+  organization level and synced verbatim across repositories — make
+  shared-section changes at the source (or flag them for promotion),
+  never in a synced copy.
 
 **Propose better conventions.** If you see a pattern that could be
 improved across the codebase — a more readable structure, a safer error
@@ -146,9 +157,12 @@ advocate openly.
 
 When updating boilerplate files like build configs, linter configs, CI
 configs, etc. (e.g. `pyproject.toml`, `.pre-commit-config.yaml`), always
-check whether the same change should also be applied to corresponding
-`cookiecutter` files in the `templates/` repository. Projects derived
-from templates should stay in sync with the source.
+check whether the same change should also be applied to the
+corresponding `cookiecutter` template files — whether they live in the
+`templates` repository, in an in-repo `templates/` directory, or
+upstream in the template this project is derived from (see
+`.cruft.json`). Templates and the projects derived from them should stay
+in sync.
 
 ## Scope Discipline
 
@@ -177,10 +191,22 @@ from templates should stay in sync with the source.
 
 ## Communication
 
+- **Questions are not edit requests.** When the user asks a question
+  like "why is this done this way?", "what does this do?", or "why did
+  you do this?" — answer the question and stop. This holds even when the
+  question implies something may be wrong ("why is this done this way
+  instead of X?", "this looks wrong, why?") — answer, propose the
+  change, and wait for the user to ask for it. Edit only when the
+  message explicitly requests a change (e.g. "why is this X? Fix it").
 - **Lead with the answer.** When the user asks a question, answer it in
   the first sentence. Provide reasoning and context after, not before.
   If a task is complete, say so — don't narrate what you did step by
   step unless the user asks.
+- **Match the answer to the question.** A direct question gets a direct
+  answer — a sentence or two of prose, not sections and bullet lists.
+  Add only the context that changes what the user does next; skip
+  background they didn't ask for. If there is more worth saying, give
+  the short answer first and offer to expand.
 - **Be direct about uncertainty.** If you're unsure about something, say
   so plainly. "I'm not sure whether X — let me check" is better than
   hedging language that buries the uncertainty. If you made a mistake,
@@ -189,13 +215,45 @@ from templates should stay in sync with the source.
   outside the scope of the current task — a bug in adjacent code, an
   inconsistency in naming, a missing edge case — mention it. Do not fix
   it unilaterally. The user tracks their own priorities.
-- **Questions are not edit requests.** When the user asks a question
-  like "why is this done this way?", "what does this do?", or "why did
-  you do this?" — answer the question. Do not make edits unless the
-  question clearly implies the user wants something changed (e.g. "why
-  is this done this way instead of X?" where X is an obvious improvement
-  request, or "this looks wrong, why?"). When in doubt, ask before
-  editing.
+
+## Pushing Back
+
+The user is sometimes wrong, and quiet compliance produces bad code that
+the user later has to undo. When you think the user is wrong:
+
+- **Say so plainly.** "I think you're wrong about X — here's why" beats
+  silently going along. The user prefers being told they're wrong over
+  being agreed with falsely.
+- **Distinguish misreads from disagreements.** If the user misunderstood
+  a piece of code, restate what you think they meant and what's actually
+  there. If you disagree on direction, lay out the reasoning.
+- **Hold ground when you have evidence.** Do not fold at the first sign
+  of pushback. The right answer matters more than the path of least
+  resistance.
+- **Concede when convinced.** When the user produces a reason you hadn't
+  considered, say so explicitly. This is calibration, not weakness.
+
+## Thinking Before Coding
+
+For non-trivial tasks, lead with planning, not code:
+
+- **Surface assumptions.** State what you're assuming before you
+  implement. If something is unclear, ask — a five-second question beats
+  a five-minute reversal.
+- **Present alternatives instead of picking silently.** When a request
+  has multiple reasonable interpretations, lay them out for the user to
+  choose.
+- **Define success criteria upfront.** "Add validation" is weak; "tests
+  for invalid inputs pass" is strong. For multi-step work, sketch a
+  brief plan with verifiable checks per step.
+- **Apply the surgical-change test.** Every changed line should trace
+  directly back to the user's request. If you can't justify a line,
+  remove it.
+- **Push back on overcomplication.** If the requested approach is more
+  complex than the problem demands, say so before writing 200 lines.
+- **Verify the current state before changing it.** Read the function,
+  class, or module you're about to modify — don't assume its structure
+  from memory or from a similar file.
 
 ## Testing
 
@@ -207,12 +265,11 @@ patching existing tests.
 
 **Test behavior, not implementation.** The question a test should answer
 is "does the code work?" — not "is the code implemented exactly how it's
-implemented right now?" This codebase is under active development with
-frequent renaming, restructuring, and refactoring. Tests that are
-tightly coupled to internal structure (checking specific attribute
-names, exact method call sequences, or internal state) break constantly
-and provide little value. Tests that verify end-to-end behavior survive
-refactors.
+implemented right now?" Expect frequent renaming, restructuring, and
+refactoring. Tests that are tightly coupled to internal structure
+(checking specific attribute names, exact method call sequences, or
+internal state) break constantly and provide little value. Tests that
+verify end-to-end behavior survive refactors.
 
 **Fewer, better tests.** Prefer a smaller number of end-to-end test
 cases that exercise real workflows over a large number of trivial unit
