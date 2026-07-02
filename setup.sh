@@ -389,6 +389,8 @@ echo "# $WORKSPACE_DIR" >"$WORKSPACE_GITCONFIG"
 git config --file "$WORKSPACE_GITCONFIG" user.name "$GIT_USER"
 git config --file "$WORKSPACE_GITCONFIG" user.email "$GIT_EMAIL"
 git config --file "$WORKSPACE_GITCONFIG" github.user "$GITHUB_USER"
+# Pin the HTTPS credential username so fetch/push hit this workspace's GitHub account
+git config --file "$WORKSPACE_GITCONFIG" "credential.https://github.com.username" "$GITHUB_USER"
 # Use a dedicated SSH key so fetch/push hit this workspace's GitHub account
 if [[ -n "$SSH_KEY" ]]; then
     git config --file "$WORKSPACE_GITCONFIG" core.sshCommand "ssh -i $SSH_KEY -o IdentitiesOnly=yes"
