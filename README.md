@@ -56,7 +56,7 @@ programming languages, AI coding agents, applications, shell
 configuration, and editor settings. It auto-detects macOS vs Linux.
 
 > [!NOTE]
-> - `--email` is required on every run.
+> - `--email` and `--github` are required on every run.
 > - `--user` defaults to your OS account full name (e.g. "First Last").
 
 > [!WARNING]
@@ -70,16 +70,16 @@ configuration, and editor settings. It auto-detects macOS vs Linux.
 chmod +x ./dev/setup.sh
 
 # Full install
-./dev/setup.sh --email=<email>
+./dev/setup.sh --email=<email> --github=<user>
 
 # Headless install (skip GUI apps and editor configuration)
-./dev/setup.sh --headless --email=<email>
+./dev/setup.sh --headless --email=<email> --github=<user>
 
 # Full install, plus TeX/LaTeX (macOS only)
-./dev/setup.sh --tex --email=<email>
+./dev/setup.sh --tex --email=<email> --github=<user>
 
 # Repair symlinks and reconfigure (skip all installs)
-./dev/setup.sh --repair --email=<email>
+./dev/setup.sh --repair --email=<email> --github=<user>
 ```
 
 Run `./dev/setup.sh --help` to see all options.
@@ -97,10 +97,17 @@ Following installation, open iTerm2 and navigate via the menu bar to
 ## Skills
 
 All agent skills live in `agents/skills/`; `claude/skills/` and
-`codex/skills/` are symlinks to it (surfaced to tools as
-`.claude/skills/` and `.codex/skills/`). Each skill is a subdirectory
-containing a `SKILL.md` file whose frontmatter defines `name` and
-`description`, plus optional fields such as `argument-hint`.
+`codex/skills/` are symlinks to it. Through the parent-directory
+symlinks created by `setup.sh` and `agentconf`, agents discover the
+skills at:
+
+- `.agents/skills/` — read natively by Codex
+- `.claude/skills/` — read by Claude Code
+- `.codex/skills/` — future-proofing, should Codex add that scan path
+
+Each skill is a subdirectory containing a `SKILL.md` file whose
+frontmatter defines `name` and `description`, plus optional fields
+such as `argument-hint`.
 
 ## License
 
