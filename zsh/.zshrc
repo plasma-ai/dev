@@ -376,7 +376,7 @@ Initialize a timestamped plan file in \$PLANS_DIR.
 
 Arguments:
     name      Short descriptive name
-    author    Plan author (e.g. Claude, Codex)
+    author    Plan author with model (e.g. "Claude (Fable 5)")
 USAGE
 }
 
