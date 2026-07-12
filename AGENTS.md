@@ -111,9 +111,8 @@ When writing or modifying code:
    existing comment patterns in new code.
 6. **When in doubt, emulate.** Find the nearest analogous code in the
    codebase and mirror its structure.
-7. **Preserve trailing newline patterns.** If a file ends with a
-   trailing newline, keep it. If a file ends without one, don't add one.
-   Match whatever the file already does.
+7. **End files with a trailing newline.** Every committed file ends with
+   one — the `end-of-file-fixer` hook enforces it.
 
 ### Adapting to the Codebase
 
