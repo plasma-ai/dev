@@ -152,6 +152,25 @@ particular style, and will always prefer being consistently good over
 consistently familiar. The rule is: don't deviate silently, but do
 advocate openly.
 
+### Patterns Wiki
+
+The `patterns` repo at the workspace root holds the org's authoritative
+code-pattern reference — a wiki (under `patterns/patterns/`) of
+architecture and design principles, per-surface conventions (most pages
+end in an audit command), and recipes for common tasks.
+
+- **Consult it before designing or writing code.** Run
+  `wiki map --path patterns/patterns` and read the few pages covering
+  your surface; use `recipes/` for common tasks (adding a CLI command,
+  scaffolding a package, standing up a test suite). The wiki wins over
+  any pattern summary in a repo file; when a page and the local code you
+  are editing disagree, the local code wins — flag the discrepancy
+  rather than fixing it silently.
+- **Maintain it as conventions evolve.** When a new convention is ruled,
+  a pattern changes, or you discover an undocumented one worth
+  recording, update the corresponding page per `patterns/AGENTS.md`,
+  then run `wiki update` and `wiki lint`.
+
 ## Templates
 
 When updating boilerplate files like build configs, linter configs, CI
