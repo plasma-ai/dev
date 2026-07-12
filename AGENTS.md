@@ -42,8 +42,10 @@ plan <short_descriptive_name> <agent>
 
 - `<short_descriptive_name>` uses underscores and no dashes, except an
   optional trailing `-v{version}` (e.g. `refactor_node_events`,
-  `refactor_node_events-v2`); `<agent>` is `Claude` or `Codex`. The
-  command prints the created path
+  `refactor_node_events-v2`); `<agent>` is the agent name with its
+  model in parentheses, quoted since it contains spaces (e.g.
+  `"Claude (Fable 5)"` or `"Codex (GPT-5.6)"`). The command prints the
+  created path
   (`$PLANS_DIR/<ISO 8601 UTC timestamp>-<name>.md`) — write your plan
   into that file. Do not hand-compute timestamps or use the
   auto-generated plan-mode filename.
@@ -56,9 +58,10 @@ plan <short_descriptive_name> <agent>
   `# Refactor Node Event Handling`).
 
 If a plan is substantially modified later on, create a new version with
-a `-v{version}` suffix (e.g. `plan refactor_node_events-v2 Claude`). For
-minor edits or revisions within the same session, update the plan in
-place rather than creating a new version.
+a `-v{version}` suffix (e.g.
+`plan refactor_node_events-v2 "Claude (Fable 5)"`). For minor edits or
+revisions within the same session, update the plan in place rather than
+creating a new version.
 
 After saving a plan, always print its full contents in the conversation
 so the user can review it inline.
