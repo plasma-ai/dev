@@ -1,6 +1,6 @@
 # https://developers.openai.com/codex/config-reference
 
-model_reasoning_effort = "high"
+model_reasoning_effort = "xhigh"
 plan_mode_reasoning_effort = "high"
 personality = "pragmatic"
 sandbox_mode = "danger-full-access"
