@@ -1,22 +1,28 @@
 {
     // General
     "window.commandCenter": true,
+    "window.autoDetectColorScheme": false,
     "editor.minimap.enabled": false,
     "editor.inlayHints.enabled": "off",
+    "diffEditor.ignoreTrimWhitespace": false,
+    // Workbench
     "workbench.tree.indent": 12,
     "workbench.editor.empty.hint": "hidden",
     "workbench.activityBar.orientation": "vertical",
     "workbench.colorTheme": "Gruvbox Material Dark",
-    "files.autoSave": "afterDelay",
-    "files.trimTrailingWhitespace": true,
-    "diffEditor.ignoreTrimWhitespace": false,
-    "files.exclude": {
-        "**/__pycache__": true
-    },
     "workbench.editorAssociations": {
         "*.ipynb": "jupyter-notebook",
         "*.pdf": "latex-workshop-pdf-hook"
     },
+    // Files
+    "files.autoSave": "afterDelay",
+    "files.trimTrailingWhitespace": true,
+    "files.exclude": {
+        "**/__pycache__": true
+    },
+    // Updates
+    "update.mode": "none",
+    "extensions.autoUpdate": true,
     // Telemetry
     "telemetry.telemetryLevel": "off",
     // Git
@@ -25,8 +31,6 @@
     "git.repositoryScanMaxDepth": 1,
     // GitHub
     "githubPullRequests.pullBranch": "never",
-    // Extensions
-    "extensions.autoUpdate": true,
     // Spelling
     "cSpell.language": "en,en-US",
     "cSpell.enabledFileTypes": {
