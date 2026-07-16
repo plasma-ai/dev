@@ -250,7 +250,6 @@ if [[ "$MACOS" == true ]] && [[ "$HEADLESS" == false ]] && [[ "$REPAIR" == false
     # AI tools
     brew install --cask claude
     brew install --cask chatgpt
-    brew install --cask codex-app
     # Dev tools
     brew install --cask github
     brew install --cask docker
@@ -439,7 +438,7 @@ if [[ "$REPAIR" == false ]]; then
     fi
     # Pyenv
     echo "installing pyenv versions"
-    eval "$(pyenv init -)"
+    eval "$(pyenv init - --no-rehash zsh)"
     pyenv install --skip-existing "$PYTHON_STABLE"
     pyenv install --skip-existing "$PYTHON_LATEST"
     pyenv global "$PYTHON_STABLE"
