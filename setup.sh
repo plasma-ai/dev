@@ -250,7 +250,6 @@ if [[ "$MACOS" == true ]] && [[ "$HEADLESS" == false ]] && [[ "$REPAIR" == false
     # AI tools
     brew install --cask claude
     brew install --cask chatgpt
-    brew install --cask codex-app
     # Dev tools
     brew install --cask github
     brew install --cask docker
