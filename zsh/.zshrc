@@ -189,7 +189,7 @@ if command -v pyenv &>/dev/null; then
     export PYENV_VIRTUALENV_DISABLE_PROMPT=1
     export PYENV_VERSION="$PYTHON_STABLE"
     export PYENV_ROOT="$HOME/.pyenv"
-    eval "$(pyenv init -)"
+    eval "$(pyenv init - --no-rehash zsh)"
     eval "$(pyenv virtualenv-init -)"
 fi
 

@@ -439,7 +439,7 @@ if [[ "$REPAIR" == false ]]; then
     fi
     # Pyenv
     echo "installing pyenv versions"
-    eval "$(pyenv init -)"
+    eval "$(pyenv init - --no-rehash zsh)"
     pyenv install --skip-existing "$PYTHON_STABLE"
     pyenv install --skip-existing "$PYTHON_LATEST"
     pyenv global "$PYTHON_STABLE"
