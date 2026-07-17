@@ -8,11 +8,8 @@
   "permissions": {
     "defaultMode": "bypassPermissions",
     "allow": [
-      "Write(*.md)",
-      "Write(*.py)"
-    ],
-    "ask": [
-      "Bash(git clone*)"
+      "Edit(*.md)",
+      "Edit(*.py)"
     ]
   },
   "env": {
