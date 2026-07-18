@@ -57,11 +57,11 @@ plan <short_descriptive_name> <agent>
   it into a proper descriptive title (e.g.
   `# Refactor Node Event Handling`).
 
-If a plan is substantially modified later on, create a new version with
-a `-v{version}` suffix (e.g.
-`plan refactor_node_events-v2 "Claude (Fable 5)"`). For minor edits or
-revisions within the same session, update the plan in place rather than
-creating a new version.
+Create a `-v{version}` successor (e.g.
+`plan refactor_node_events-v2 "Claude (Fable 5)"`) only when a plan is
+truly superseded. Iterating on a plan — feedback rounds, rewrites,
+restructuring while the plan is still being shaped — updates the file
+in place regardless of session or how substantial the edits are.
 
 After saving a plan, always print its full contents in the conversation
 so the user can review it inline.
