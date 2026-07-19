@@ -1,21 +1,27 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Reject staged symlinks whose target resolves outside the repository,
-# so links into sibling repos (e.g. private skill directories) are never
+# Reject staged symlinks that resolve outside the repository
+# ----------------------------------------------------------
+#
+# Usage: reject-external-symlinks.sh <symlink>...
+#
+# Links into sibling repos (e.g. private skill directories) must never be
 # committed. Intra-repo symlinks are allowed. The target is resolved lexically
 # (no disk access), so the check holds even before the target exists on disk.
 
-root="$(git rev-parse --show-toplevel)"
-status=0
+# pre-commit invokes hooks from the repository root, so the
+# cwd-dependent git call is the hook's contract
+ROOT="$(git rev-parse --show-toplevel)"
+STATUS=0
 for link in "$@"; do
-    target="$(readlink "$link")"
-    if resolved="$(cd "$(dirname "$link")" && python3 -c 'import os, sys; print(os.path.abspath(sys.argv[1]))' "$target")"; then
-        case "$resolved/" in
-            "$root"/*) continue ;;
+    TARGET="$(readlink "$link")"
+    if RESOLVED="$(cd "$(dirname "$link")" && python3 -c 'import os, sys; print(os.path.abspath(sys.argv[1]))' "$TARGET")"; then
+        case "$RESOLVED/" in
+            "$ROOT"/*) continue ;;
         esac
     fi
-    echo "error: symlink points outside the repo: $link -> $target" >&2
-    status=1
+    echo "Error: symlink points outside the repo: $link -> $TARGET" >&2
+    STATUS=1
 done
-exit "$status"
+exit "$STATUS"
