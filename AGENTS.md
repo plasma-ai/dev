@@ -42,12 +42,11 @@ plan <short_descriptive_name> <agent>
 
 - `<short_descriptive_name>` uses underscores and no dashes, except an
   optional trailing `-v{version}` (e.g. `refactor_node_events`,
-  `refactor_node_events-v2`); `<agent>` is the agent name with its
-  model in parentheses, quoted since it contains spaces (e.g.
+  `refactor_node_events-v2`); `<agent>` is the agent name with its model
+  in parentheses, quoted since it contains spaces (e.g.
   `"Claude (Fable 5)"` or `"Codex (GPT-5.6)"`). The command prints the
-  created path
-  (`$PLANS_DIR/<ISO 8601 UTC timestamp>-<name>.md`) — write your plan
-  into that file. Do not hand-compute timestamps or use the
+  created path (`$PLANS_DIR/<ISO 8601 UTC timestamp>-<name>.md`) — write
+  your plan into that file. Do not hand-compute timestamps or use the
   auto-generated plan-mode filename.
 - `$PLANS_DIR` defaults to the `scratch/plans` directory beside the
   `dev` repo; override it to point plans elsewhere. Plans from all
@@ -60,8 +59,8 @@ plan <short_descriptive_name> <agent>
 Create a `-v{version}` successor (e.g.
 `plan refactor_node_events-v2 "Claude (Fable 5)"`) only when a plan is
 truly superseded. Iterating on a plan — feedback rounds, rewrites,
-restructuring while the plan is still being shaped — updates the file
-in place regardless of session or how substantial the edits are.
+restructuring while the plan is still being shaped — updates the file in
+place regardless of session or how substantial the edits are.
 
 After saving a plan, always print its full contents in the conversation
 so the user can review it inline.
@@ -143,9 +142,8 @@ just accelerate your ramp-up.
   aren't yet documented, add them to the appropriate `AGENTS.md`:
   repo-specific conventions belong in the repo's own file; org-wide
   conventions belong in the shared sections, which are maintained at the
-  organization level and synced verbatim across repositories — make
-  shared-section changes at the source (or flag them for promotion),
-  never in a synced copy.
+  organization level — make shared-section changes at the org root (or
+  flag them for promotion) and propagate them to repo copies.
 
 **Propose better conventions.** If you see a pattern that could be
 improved across the codebase — a more readable structure, a safer error
@@ -288,6 +286,13 @@ parameterization or data-driven testing mechanisms to cover variations
 instead of duplicating test functions with different constants. Avoid
 random magic numbers — use descriptive variable names or setup helpers
 that make the test's intent clear.
+
+**Red before green across boundaries.** A failing test that must land
+before its fix — crossing a commit or merge boundary — carries the test
+framework's strict expected-failure marker naming the reason; the fix
+commit removes the marker, and strict mode makes a lingering marker fail
+the suite. A red-then-fix chain inside a single change stays bare-red
+and never commits red.
 
 ### Good Tests
 
