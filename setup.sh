@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
-cd "$(dirname "$0")"
 
 # Set up a development machine (auto-detects macOS vs Linux)
 # ----------------------------------------------------------
 
-# Detect platform
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+# detect platform
 OS="$(uname -s)"
 MACOS=false
 LINUX=false
@@ -14,15 +16,15 @@ if [[ "$OS" == "Darwin" ]]; then
 elif [[ "$OS" == "Linux" ]]; then
     LINUX=true
 else
-    echo "unsupported platform: $OS" >&2
+    echo "Error: unsupported platform: $OS" >&2
     exit 1
 fi
 if [[ "$MACOS" == true && "$(uname -m)" != "arm64" ]]; then
-    echo "macOS setup requires Apple Silicon (arm64): detected $(uname -m)" >&2
+    echo "Error: macOS setup requires Apple Silicon (arm64): detected $(uname -m)" >&2
     exit 1
 fi
 
-# Parse options
+# parse options
 GIT_USER=""
 GIT_EMAIL=""
 GITHUB_USER=""
@@ -49,7 +51,7 @@ Options:
     --repair                Re-link configs only (skip all installs)
     --help|-h               Show this help message
 USAGE
-    exit 0
+    exit "${1:-0}"
 }
 
 while [[ $# -gt 0 ]]; do
@@ -63,8 +65,8 @@ while [[ $# -gt 0 ]]; do
                 GIT_USER="$2"
                 shift 2
             else
-                echo "--user requires a value" >&2
-                exit 1
+                echo "Error: --user requires a value" >&2
+                usage 1
             fi
             ;;
         --email | --email=*)
@@ -75,8 +77,8 @@ while [[ $# -gt 0 ]]; do
                 GIT_EMAIL="$2"
                 shift 2
             else
-                echo "--email requires a value" >&2
-                exit 1
+                echo "Error: --email requires a value" >&2
+                usage 1
             fi
             ;;
         --github | --github=*)
@@ -87,8 +89,8 @@ while [[ $# -gt 0 ]]; do
                 GITHUB_USER="$2"
                 shift 2
             else
-                echo "--github requires a value" >&2
-                exit 1
+                echo "Error: --github requires a value" >&2
+                usage 1
             fi
             ;;
         --ssh-key | --ssh-key=*)
@@ -99,8 +101,8 @@ while [[ $# -gt 0 ]]; do
                 SSH_KEY="$2"
                 shift 2
             else
-                echo "--ssh-key requires a value" >&2
-                exit 1
+                echo "Error: --ssh-key requires a value" >&2
+                usage 1
             fi
             ;;
         --signing-key | --signing-key=*)
@@ -111,8 +113,8 @@ while [[ $# -gt 0 ]]; do
                 SIGNING_KEY="$2"
                 shift 2
             else
-                echo "--signing-key requires a value" >&2
-                exit 1
+                echo "Error: --signing-key requires a value" >&2
+                usage 1
             fi
             ;;
         --headless)
@@ -128,29 +130,29 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         *)
-            echo "unknown option: $1" >&2
-            exit 1
+            echo "Error: unknown option: $1" >&2
+            usage 1
             ;;
     esac
 done
 if [[ "$TEX" == true && "$MACOS" != true ]]; then
-    echo "--tex requires macOS" >&2
+    echo "Error: --tex requires macOS" >&2
     exit 1
 fi
 if [[ -z "$GIT_EMAIL" ]]; then
-    echo "--email is required" >&2
+    echo "Error: --email is required" >&2
     exit 1
 fi
 if [[ -z "$GITHUB_USER" ]]; then
-    echo "--github (GitHub username) is required" >&2
+    echo "Error: --github (GitHub username) is required" >&2
     exit 1
 fi
 if [[ -z "${USER:-}" ]]; then
-    echo "\$USER is not set" >&2
+    echo "Error: \$USER is not set" >&2
     exit 1
 fi
 
-# Name
+# resolve git user name
 if [[ "$MACOS" == true ]]; then
     NAME="$(id -F)"
 elif [[ "$LINUX" == true ]]; then
@@ -159,7 +161,7 @@ fi
 NAME="${NAME:-$USER}"
 GIT_USER="${GIT_USER:-$NAME}"
 
-# ------ System Preferences ------
+# ------ system preferences
 
 if [[ "$MACOS" == true && "$REPAIR" == false ]]; then
     defaults write com.apple.dock workspaces-auto-swoosh -bool false
@@ -170,138 +172,143 @@ if [[ "$MACOS" == true && "$REPAIR" == false ]]; then
     sudo softwareupdate --install-rosetta --agree-to-license
 fi
 
-# ------ Homebrew ------
+# ------ homebrew
 
-# Brew prefix
+# set brew prefix
 if [[ "$MACOS" == true ]]; then
     BREW_PREFIX="/opt/homebrew"
 elif [[ "$LINUX" == true ]]; then
     BREW_PREFIX="/home/linuxbrew/.linuxbrew"
 fi
 
-# Install brew
+# install brew
 if [[ "$REPAIR" == false ]]; then
-    echo "installing brew"
+    echo "==> installing brew"
     if ! command -v brew &>/dev/null; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    else
+        echo "Reusing existing brew install; run 'brew update' to refresh"
     fi
 fi
-# Add brew to PATH for this script
+# add brew to PATH for this script
 if [[ ! -x "${BREW_PREFIX}/bin/brew" ]]; then
-    echo "brew not found at ${BREW_PREFIX}/bin/brew" >&2
+    echo "Error: brew not found at ${BREW_PREFIX}/bin/brew" >&2
     exit 1
 fi
 eval "$("${BREW_PREFIX}"/bin/brew shellenv)"
-# Add brew shellenv to .zprofile for non-interactive login shells
+# add brew shellenv to .zprofile for non-interactive login shells
 if ! grep -q 'brew shellenv' "$HOME/.zprofile" 2>/dev/null; then
     (
         echo
         echo "eval \"\$(${BREW_PREFIX}/bin/brew shellenv)\""
     ) >>"$HOME/.zprofile"
+    echo "Added brew shellenv to ~/.zprofile"
 fi
 
-# Install packages
+# install packages
 if [[ "$REPAIR" == false ]]; then
-    # Zsh
+    # install Zsh and plugins
     brew install zsh zsh-completions zsh-autosuggestions zsh-syntax-highlighting
-    # Prompt
+    # install starship prompt
     brew install starship
-    # Command-line tools
+    # install command-line tools
     brew install tree bat ripgrep fd fzf zoxide cloc tokei jq yq xh httpie
-    # Shell
+    # install shell tools
     brew install shellcheck shfmt direnv
-    # System tools
+    # install system tools
     brew install htop btop tmux
-    # Git
+    # install Git tools
     brew install git git-lfs git-delta lazygit
-    # GitHub
+    # install GitHub CLI
     brew install gh
-    # GNU tools
+    # install GNU tools
     brew install coreutils wget gawk gnu-sed gnu-getopt gettext gnuplot
-    # Build tools
+    # install build tools
     brew install make cmake pkg-config openssl
-    # Compilers
+    # install compilers
     brew install llvm gcc
-    # Javascript
+    # install Javascript tools
     brew install node yarn pnpm
-    # Vim and Neovim
+    # install Vim and Neovim
     brew install vim neovim
-    # Python
+    # install Python tools
     brew install pyenv pyenv-virtualenv uv pre-commit
-    # Sphinx
+    # install Sphinx
     brew install sphinx-doc
-    # AWS
+    # install AWS CLI
     brew install awscli
-    # AI tools
+    # install AI tools
     curl -fsSL https://claude.ai/install.sh | bash
     curl -fsSL https://chatgpt.com/codex/install.sh | bash
     brew install opencode
 fi
 
-# Install macOS desktop apps
+# install macOS desktop apps
 if [[ "$MACOS" == true ]] && [[ "$HEADLESS" == false ]] && [[ "$REPAIR" == false ]]; then
-    # Terminals
+    # install terminals
     brew install --cask ghostty
     brew install --cask iterm2
-    # Editors
+    # install editors
     brew install --cask visual-studio-code
     brew install --cask cursor
     brew install --cask obsidian
-    # AI tools
+    # install AI tools
     brew install --cask claude
     brew install --cask chatgpt
-    # Dev tools
+    # install dev tools
     brew install --cask github
     brew install --cask docker
     brew install --cask tableplus
     brew install --cask postman
-    # Utilities
+    # install utilities
     brew install --cask 1password
     brew install --cask 1password-cli
     brew install --cask rectangle
     brew install --cask monitorcontrol
-    # Productivity
+    # install productivity apps
     brew install --cask granola
     brew install --cask notion
     brew install --cask linear-linear
     brew install --cask microsoft-office
     brew install --cask adobe-acrobat-pro
-    # Communication
+    # install communication apps
     brew install --cask slack
     brew install --cask zoom
     brew install --cask microsoft-teams
 fi
 
-# LaTeX (macOS only)
+# install LaTeX (macOS only)
 if [[ "$TEX" == true && "$REPAIR" == false ]]; then
     brew install --cask mactex
     brew install --cask tex-live-utility
 fi
 
-# Homebrew cleanup
+# clean up Homebrew
 if [[ "$REPAIR" == false ]]; then
-    echo "brew cleanup"
+    echo "==> cleaning up brew"
     brew cleanup
-    brew doctor || echo "(re-run brew doctor later if something breaks)"
+    brew doctor || echo "Warning: brew doctor reported issues; re-run 'brew doctor' later if something breaks" >&2
 fi
 
-# ------ Shell ------
+# ------ shell
 
-# Install Oh My Zsh and extensions
+# install Oh My Zsh and extensions
 if [[ "$REPAIR" == false ]]; then
-    echo "installing oh-my-zsh"
+    echo "==> installing oh-my-zsh"
     if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
         sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    else
+        echo "Reusing existing ~/.oh-my-zsh; delete it and re-run to refresh"
     fi
-    if ! grep -qx "$(which zsh)" /etc/shells 2>/dev/null; then
-        sudo sh -c "echo $(which zsh) >> /etc/shells"
+    if ! grep -qx "$(command -v zsh)" /etc/shells 2>/dev/null; then
+        sudo sh -c "echo $(command -v zsh) >> /etc/shells"
     fi
-    if [[ "$SHELL" != "$(which zsh)" ]]; then
-        chsh -s "$(which zsh)" || echo "(could not change login shell; run 'chsh -s $(which zsh)' later)"
+    if [[ "$SHELL" != "$(command -v zsh)" ]]; then
+        chsh -s "$(command -v zsh)" || echo "Warning: could not change login shell; run 'chsh -s $(command -v zsh)' later" >&2
     fi
 
-    # Oh My Zsh extensions
-    echo "configuring oh-my-zsh extensions"
+    # clone or update Oh My Zsh extensions
+    echo "==> configuring oh-my-zsh extensions"
     ZSH_COMPLETIONS="$HOME/.oh-my-zsh/custom/plugins/zsh-completions"
     if [[ ! -d $ZSH_COMPLETIONS ]]; then
         git clone https://github.com/zsh-users/zsh-completions.git "$ZSH_COMPLETIONS"
@@ -322,42 +329,47 @@ if [[ "$REPAIR" == false ]]; then
     fi
 fi
 
-# Suppress last login time
+# suppress last login time
 touch ~/.hushlogin
 
-# Symlink zsh config
-echo "configuring zsh"
+# symlink zsh config
+echo "==> configuring zsh"
 ln -sfn "$(pwd)/zsh/.zshrc" ~/.zshrc
+echo "Linked ~/.zshrc -> zsh/.zshrc"
 
-# Symlink starship config
-echo "configuring starship"
+# symlink starship config
+echo "==> configuring starship"
 mkdir -p ~/.config
 ln -sfn "$(pwd)/starship/starship.toml" ~/.config/starship.toml
+echo "Linked ~/.config/starship.toml -> starship/starship.toml"
 
-# Symlink ghostty config
-echo "configuring ghostty"
+# symlink ghostty config
+echo "==> configuring ghostty"
 mkdir -p ~/.config/ghostty
 ln -sfn "$(pwd)/ghostty/config" ~/.config/ghostty/config
+echo "Linked ~/.config/ghostty/config -> ghostty/config"
 
-# ------ iTerm ------
+# ------ iterm
 
 if [[ "$MACOS" == true && "$HEADLESS" == false ]]; then
-    echo "configuring iterm"
+    echo "==> configuring iterm"
     mkdir -p ~/.iterm/settings
     for f in iterm/*.plist; do
         ln -sfn "$(pwd)/$f" ~/.iterm/settings/"$(basename "$f")"
+        echo "Linked ~/.iterm/settings/$(basename "$f") -> $f"
     done
     if [[ "$REPAIR" == false ]]; then
         curl -fsSL https://iterm2.com/shell_integration/zsh -o ~/.iterm2_shell_integration.zsh
     fi
 fi
 
-# ------ Git ------
+# ------ git
 
-echo "configuring git"
+echo "==> configuring git"
 if [[ -f ./git/.gitignore ]]; then
     ln -sfn "$(pwd)/git/.gitignore" ~/.gitignore
     git config --global core.excludesfile ~/.gitignore
+    echo "Linked ~/.gitignore -> git/.gitignore"
 fi
 if [[ -d .git && -d agents ]]; then
     mkdir -p .git/info
@@ -373,10 +385,11 @@ if [[ -d .git && -d agents ]]; then
         echo "$END"
         echo
     } >"$EXCLUDE"
+    echo "Wrote agent skill symlinks to $EXCLUDE"
 fi
 git config --global user.useConfigOnly true
 
-# Scope git identity to this dev repo's workspace via a conditional
+# scope git identity to this dev repo's workspace via a conditional
 # include, so every repo under the workspace uses it and each workspace
 # (e.g. plasma vs plasma-internal) keeps its own; no global identity is
 # set, so with user.useConfigOnly a repo outside any configured workspace
@@ -388,19 +401,20 @@ echo "# $WORKSPACE_DIR" >"$WORKSPACE_GITCONFIG"
 git config --file "$WORKSPACE_GITCONFIG" user.name "$GIT_USER"
 git config --file "$WORKSPACE_GITCONFIG" user.email "$GIT_EMAIL"
 git config --file "$WORKSPACE_GITCONFIG" github.user "$GITHUB_USER"
-# Pin the HTTPS credential username so fetch/push hit this workspace's GitHub account
+# pin the HTTPS credential username so fetch/push hit this workspace's GitHub account
 git config --file "$WORKSPACE_GITCONFIG" "credential.https://github.com.username" "$GITHUB_USER"
-# Use a dedicated SSH key so fetch/push hit this workspace's GitHub account
+# use a dedicated SSH key so fetch/push hit this workspace's GitHub account
 if [[ -n "$SSH_KEY" ]]; then
     git config --file "$WORKSPACE_GITCONFIG" core.sshCommand "ssh -i $SSH_KEY -o IdentitiesOnly=yes"
 fi
-# Sign commits with this workspace's SSH signing key
+# sign commits with this workspace's SSH signing key
 if [[ -n "$SIGNING_KEY" ]]; then
     git config --file "$WORKSPACE_GITCONFIG" gpg.format ssh
     git config --file "$WORKSPACE_GITCONFIG" user.signingkey "$SIGNING_KEY"
     git config --file "$WORKSPACE_GITCONFIG" commit.gpgsign true
 fi
 git config --global "includeIf.gitdir:$WORKSPACE_DIR/.path" "$WORKSPACE_GITCONFIG"
+echo "Wrote workspace git identity to $WORKSPACE_GITCONFIG"
 
 git config --global init.defaultBranch 'main'
 git config --global pull.rebase false
@@ -408,7 +422,7 @@ git config --global core.fileMode false
 git config --global alias.update '!update() {
     git fetch --all && git pull
 }; update'
-# shellcheck disable=SC2016
+# shellcheck disable=SC2016  # literal $d/$@ expand inside the git alias, not here
 git config --global alias.all '!all() {
     for d in */; do
         git -C "$d" rev-parse --git-dir >/dev/null 2>&1 && {
@@ -423,37 +437,38 @@ git config --global delta.navigate true
 if [[ "$MACOS" == true ]]; then
     git config --global credential.helper osxkeychain
 fi
+echo "Wrote global git defaults to ~/.gitconfig"
 
-# ------ Python ------
+# ------ python
 
 if [[ "$REPAIR" == false ]]; then
-    # Load Python version variables from .zshrc
+    # load Python version variables from .zshrc
     eval "$(grep -E '^export PYTHON_(STABLE|LATEST)=' ~/.zshrc)"
     if [[ -z "${PYTHON_STABLE:-}" ]]; then
-        echo "PYTHON_STABLE not found in ~/.zshrc" >&2
+        echo "Error: PYTHON_STABLE not found in ~/.zshrc" >&2
         exit 1
     elif [[ -z "${PYTHON_LATEST:-}" ]]; then
-        echo "PYTHON_LATEST not found in ~/.zshrc" >&2
+        echo "Error: PYTHON_LATEST not found in ~/.zshrc" >&2
         exit 1
     fi
-    # Pyenv
-    echo "installing pyenv versions"
+    # install pyenv versions
+    echo "==> installing pyenv versions"
     eval "$(pyenv init - --no-rehash zsh)"
     pyenv install --skip-existing "$PYTHON_STABLE"
     pyenv install --skip-existing "$PYTHON_LATEST"
     pyenv global "$PYTHON_STABLE"
 fi
 
-# ------ Poetry ------
+# ------ poetry
 
 if [[ "$REPAIR" == false ]]; then
-    echo "installing poetry"
+    echo "==> installing poetry"
     curl -sSL https://install.python-poetry.org | python3 -
 fi
 
-# ------ Agent config ------
+# ------ agent config
 
-# Link the shared agent config into the parent workspace. Absolute targets keep
+# link the shared agent config into the parent workspace. Absolute targets keep
 # this working whatever the repo is named; existing real files are left untouched.
 agentlink() {
     if [[ -e "$2" && ! -L "$2" ]]; then
@@ -461,6 +476,7 @@ agentlink() {
         return
     fi
     ln -sfn "$1" "$2"
+    echo "Linked $2 -> $1"
 }
 agentlink "$(pwd)/AGENTS.md" ../AGENTS.md
 agentlink "$(pwd)/AGENTS.md" ../CLAUDE.md
@@ -468,16 +484,17 @@ agentlink "$(pwd)/agents" ../.agents
 agentlink "$(pwd)/claude" ../.claude
 agentlink "$(pwd)/codex" ../.codex
 
-# ------ Editors ------
+# ------ editors
 
 if [[ "$MACOS" == true ]] && [[ "$HEADLESS" == false ]]; then
-    # Visual Studio Code
+    # configure Visual Studio Code
     CODE_PATH="/Applications/Visual Studio Code.app"
     if [[ -d "$CODE_PATH" ]]; then
         CODE_LIB="$HOME/Library/Application Support/Code"
         mkdir -p "$CODE_LIB/User/"
         for f in vscode/*.json; do
             ln -sfn "$(pwd)/$f" "$CODE_LIB/User/$(basename "$f")"
+            echo "Linked $CODE_LIB/User/$(basename "$f") -> $f"
         done
     fi
     if [[ "$REPAIR" == false ]] && command -v code &>/dev/null; then
@@ -492,14 +509,16 @@ if [[ "$MACOS" == true ]] && [[ "$HEADLESS" == false ]]; then
         code --install-extension jpcrs.gruvbox-material-modern
         mkdir -p "$HOME/.vscode/extensions"
         ln -sfn "$(pwd)/vscode/yaml-doc" "$HOME/.vscode/extensions/yaml-doc"
+        echo "Linked ~/.vscode/extensions/yaml-doc -> vscode/yaml-doc"
     fi
-    # Cursor
+    # configure Cursor
     CURSOR_PATH="/Applications/Cursor.app"
     if [[ -d "$CURSOR_PATH" ]]; then
         CURSOR_LIB="$HOME/Library/Application Support/Cursor"
         mkdir -p "$CURSOR_LIB/User/"
         for f in cursor/*.json; do
             ln -sfn "$(pwd)/$f" "$CURSOR_LIB/User/$(basename "$f")"
+            echo "Linked $CURSOR_LIB/User/$(basename "$f") -> $f"
         done
     fi
     if [[ "$REPAIR" == false ]] && command -v cursor &>/dev/null; then
@@ -513,9 +532,16 @@ if [[ "$MACOS" == true ]] && [[ "$HEADLESS" == false ]]; then
         cursor --install-extension sainnhe.gruvbox-material
         mkdir -p "$HOME/.cursor/extensions"
         ln -sfn "$(pwd)/cursor/yaml-doc" "$HOME/.cursor/extensions/yaml-doc"
+        echo "Linked ~/.cursor/extensions/yaml-doc -> cursor/yaml-doc"
     fi
 fi
 
-# ------ Exit ------
+# ------ exit
 
-echo "setup complete"
+cat <<NEXT
+Setup complete. Start a shell that picks up the new configuration:
+
+    exec zsh
+
+Or open a new terminal window.
+NEXT
