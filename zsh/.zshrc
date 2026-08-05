@@ -206,6 +206,29 @@ export SSH_KEY_PATH="$HOME/.ssh"
 # Plans directory: scratch/plans beside the dev repo
 export PLANS_DIR="${PLANS_DIR:-${${(%):-%x}:A:h:h:h}/scratch/plans}"
 
+# Print sshkey usage
+_sshkey_usage () {
+    cat <<USAGE
+Usage: sshkey <name> <email> [options]
+
+Generate an SSH key and register it in ~/.ssh/config.
+
+Arguments:
+    name     Key name (the ~/.ssh/config Host entry)
+    email    Email for the key comment
+
+Options:
+    --host=<host>    HostName for the config entry
+    --user=<user>    User for the config entry
+    --github         Shorthand for --host=github.com --user=git
+    --default        Also copy the key to the default key path
+    --copy           Copy the public key to the clipboard
+    --help|-h        Show this help message
+
+--host and --user also accept space-separated values (--host <host>).
+USAGE
+}
+
 # Generate an SSH key and register it in ~/.ssh/config
 sshkey () {
     # Name is the first positional arg, email the second. --host/--user set
@@ -221,24 +244,31 @@ sshkey () {
     COPY=false
     while [[ $# -gt 0 ]]; do
         case $1 in
-            --help | -h)
-                cat <<USAGE
-Usage: sshkey <name> <email> [options]
-
-Generate an SSH key and register it in ~/.ssh/config.
-
-Options:
-    --host=<host>    HostName for the config entry
-    --user=<user>    User for the config entry
-    --github         Shorthand for --host=github.com --user=git
-    --default        Also copy the key to the default key path
-    --copy           Copy the public key to the clipboard
-    --help|-h        Show this help message
-USAGE
-                return 0
+            --help | -h) _sshkey_usage; return 0 ;;
+            --host | --host=*)
+                if [[ "$1" == *=* ]]; then
+                    SSH_HOST="${1#*=}"
+                elif [[ $# -ge 2 ]]; then
+                    SSH_HOST="$2"
+                    shift
+                else
+                    echo "Error: --host requires a value" >&2
+                    _sshkey_usage >&2
+                    return 1
+                fi
                 ;;
-            --host=*) SSH_HOST="${1#*=}" ;;
-            --user=*) SSH_USER="${1#*=}" ;;
+            --user | --user=*)
+                if [[ "$1" == *=* ]]; then
+                    SSH_USER="${1#*=}"
+                elif [[ $# -ge 2 ]]; then
+                    SSH_USER="$2"
+                    shift
+                else
+                    echo "Error: --user requires a value" >&2
+                    _sshkey_usage >&2
+                    return 1
+                fi
+                ;;
             --github) SSH_HOST="github.com"; SSH_USER="git" ;;
             --default) DEFAULT=true ;;
             --copy) COPY=true ;;
@@ -308,6 +338,27 @@ USAGE
     fi
 }
 
+# Print archive usage
+_archive_usage () {
+    cat <<USAGE
+Usage: archive <path> [options]
+
+Archive a directory or file to a timestamped copy in its parent's .archive/.
+
+Arguments:
+    path    Directory or file to archive
+
+Options:
+    --copy                 Copy instead of move (rsync for directories)
+    --clean                Remove ignored/untracked files in the archived copy
+    --exclude=<pattern>    rsync exclude pattern (repeatable; implies --copy)
+    --help|-h              Show this help message
+
+--exclude always copies, only applies to directories, and
+also accepts a space-separated value (--exclude <pattern>).
+USAGE
+}
+
 # Archive dirs and files
 archive () {
     NOW="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
@@ -315,10 +366,26 @@ archive () {
     ARGS=()
     COPY=false
     CLEAN=false
+    EXCLUDES=()
     while [[ $# -gt 0 ]]; do
         case $1 in
+            --help | -h) _archive_usage; return 0 ;;
             --copy) COPY=true ;;
             --clean) CLEAN=true ;;
+            --exclude | --exclude=*)
+                if [[ "$1" == *=* ]]; then
+                    EXCLUDES+=("${1#*=}")
+                elif [[ $# -ge 2 ]]; then
+                    EXCLUDES+=("$2")
+                    shift
+                else
+                    echo "Error: --exclude requires a value" >&2
+                    _archive_usage >&2
+                    return 1
+                fi
+                # (exclude implies copy)
+                COPY=true
+                ;;
             *) ARGS+=("$1") ;;
         esac
         shift
@@ -332,7 +399,7 @@ archive () {
         if [[ -d "$FROM" ]]; then
             TO="$DIR/.archive/$NAME ($NOW)"
             if [[ "$COPY" == true ]]; then
-                rsync -a "$FROM/" "$TO"
+                rsync -a "${EXCLUDES[@]/#/--exclude=}" "$FROM/" "$TO"
             else
                 mv "$FROM" "$TO"
             fi
@@ -341,6 +408,11 @@ archive () {
                 (cd "$TO" && git clean -xdf) > /dev/null
             fi
         elif [[ -f "$FROM" ]]; then
+            if [[ ${#EXCLUDES[@]} -gt 0 ]]; then
+                echo "Error: --exclude only applies to directories" >&2
+                _archive_usage >&2
+                return 1
+            fi
             EXT="${NAME##*.}"
             NAME="${NAME%.*}"
             TO="$DIR/.archive/$NAME ($NOW).$EXT"
@@ -353,8 +425,25 @@ archive () {
     fi
 }
 
+# Print agentconf usage
+_agentconf_usage () {
+    cat <<USAGE
+Usage: agentconf [dir] [dev]
+
+Symlink agent config (.agents, .claude, .codex) from the dev repo into a project.
+
+Arguments:
+    dir    Project directory (default: .)
+    dev    Dev repo path relative to the project (default: ../dev)
+USAGE
+}
+
 # Symlink agent config into a project
 agentconf () {
+    if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+        _agentconf_usage
+        return 0
+    fi
     DIR="${1:-.}"
     DEV="${2:-../dev}"
     for SUB in agents claude codex; do
