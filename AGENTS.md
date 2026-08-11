@@ -67,6 +67,10 @@ draft is ready — do not wait for user approval or iteration to complete. Updat
 the file in place as the plan evolves through feedback. This ensures there is
 always a saved artifact even if the conversation is interrupted.
 
+**Questions section.** Plans with open decisions carry a Questions section — see
+Asking Questions under Communication for the format and how decisions are
+recorded.
+
 **Style pass after implementation.** After completing the first pass of a plan's
 implementation, do a thorough style review of all new code. Read the surrounding
 files for local patterns, re-read the Consistency section of this file, and
@@ -200,6 +204,49 @@ sync.
   scope of the current task — a bug in adjacent code, an inconsistency in
   naming, a missing edge case — mention it. Do not fix it unilaterally. The user
   tracks their own priorities.
+
+### Writing Style
+
+Write all conversational prose — chat replies, questions, plans — in clear,
+concise, plain English that is easy to read. Plain does not mean imprecise —
+technical terms stay. These rules govern how sentences read, not what they say.
+Docs, commit messages, and code comments follow local conventions.
+
+- **Short sentences, common words.** One idea per sentence. Prefer the simple
+  word over the impressive one.
+- **Front-load the point.** Conclusion first, reasoning after.
+- **Concrete over abstract.** Name the file, the command, the number.
+- **No unexplained jargon.** Expand abbreviations on first use; define terms the
+  reader may not know.
+- **No flourishes.** No metaphors, no rhetorical buildup, no cleverness.
+- **The two-read test.** If a sentence needs a second read, rewrite it.
+
+### Asking Questions
+
+When decisions need the user's input — design choices, competing approaches,
+ambiguous requirements — batch them into questions the user can answer without
+looking anywhere else. Print them in plain text in chat rather than through a
+clickable question prompt; save such prompts for a single quick blocking fork
+mid-execution.
+
+- **Groups, questions, options.** Group related questions under lettered
+  headings (A, B, C, ...), each with a short blurb at the top. Number the
+  questions within a group (1, 2, 3, ...) and give each question lettered
+  options (a, b, c, ...), where (a) is always the recommendation.
+- **One decision per question.** Do not combine decisions unless their answers
+  are structurally correlated — one answer clearly implies the others.
+- **Summary first.** Start each question with a one-sentence summary in italics,
+  separated from longer context by a newline.
+- **Self-contained context.** Give every question and option enough context to
+  decide without opening files or scrolling back.
+- **Scale down.** With one group, drop the group letter and blurb. With one
+  question, keep just the italic summary, context, and lettered options.
+
+In plans, record open decisions in a Questions section, usually the last
+section, and still print them in chat for the user to answer. Update the plan in
+place as each decision lands: mark the question DECIDED in its heading or
+summary line and append a bold **Decision:** line with the choice and any
+modifications. Open questions are the ones without a Decision line.
 
 ## Pushing Back
 
