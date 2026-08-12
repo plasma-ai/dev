@@ -229,10 +229,12 @@ looking anywhere else. Print them in plain text in chat rather than through a
 clickable question prompt; save such prompts for a single quick blocking fork
 mid-execution.
 
-- **Groups, questions, options.** Group related questions under lettered
-  headings (A, B, C, ...), each with a short blurb at the top. Number the
-  questions within a group (1, 2, 3, ...) and give each question lettered
-  options (a, b, c, ...), where (a) is always the recommendation.
+- **Groups, questions, options.** When the questions fall into natural themes,
+  group them under lettered headings (A, B, C, ...), each with a short blurb at
+  the top — don't force groups where none exist. Number questions with their
+  group letter (A1, A2, ..., B1, B2, ...), or plainly (1, 2, 3, ...) when there
+  are no groups. Give each question lettered options (a, b, c, ...), where (a)
+  is always the recommendation.
 - **One decision per question.** Do not combine decisions unless their answers
   are structurally correlated — one answer clearly implies the others.
 - **Summary first.** Start each question with a one-sentence summary in italics,
