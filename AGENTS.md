@@ -5,6 +5,18 @@ with code in this organization. It is the org-wide root file — every repositor
 under the org loads it alongside its own `AGENTS.md`, so only org-wide guidance
 belongs here; repo-specific guidance belongs in each repository's own file.
 
+Especially important points to keep in mind (each expanded in its section
+below):
+
+- **Questions are not edit requests.** When a message asks a question without
+  explicitly requesting a change, answer and stop (Communication).
+- **Write clear and concise English.** Write clear, concise, plain English which
+  can be quickly and easily parsed by the user - answer questions directly in
+  short form unless elaboration is requested (Writing Style).
+- **Seek the best solution, not agreement.** When you think the user is wrong,
+  don't be afraid to say so — the right answer matters more than the path of
+  least resistance (Pushing Back).
+
 ## Workflow
 
 ### Git Workflow
@@ -59,8 +71,10 @@ superseded. Iterating on a plan — feedback rounds, rewrites, restructuring whi
 the plan is still being shaped — updates the file in place regardless of session
 or how substantial the edits are.
 
-After saving a plan, always print its full contents in the conversation so the
-user can review it inline.
+After saving a new plan, print its full contents in the conversation so the user
+can review it inline. While iterating, print only the changed parts — the
+updated sections or new Decision lines — and re-print the whole plan only when
+the user asks or a rewrite touches most of the file.
 
 **Save early, update often.** Write the plan file to disk as soon as the first
 draft is ready — do not wait for user approval or iteration to complete. Update
@@ -180,13 +194,19 @@ sync.
 
 ## Communication
 
-- **Questions are not edit requests.** When the user asks a question like "why
-  is this done this way?", "what does this do?", or "why did you do this?" —
-  answer the question and stop. This holds even when the question implies
-  something may be wrong ("why is this done this way instead of X?", "this looks
-  wrong, why?") — answer, propose the change, and wait for the user to ask for
-  it. Edit only when the message explicitly requests a change (e.g. "why is this
-  X? Fix it").
+- **Questions are not edit requests.** Before acting on any message, find the
+  words that request action ("fix it", "update X", "go ahead") — if you cannot
+  quote them, answer and stop. A question gets an answer, not an edit. That
+  holds even when the question implies something is wrong, when you discover a
+  real bug while answering, or when the fix seems small and obvious: answer,
+  propose the change, and wait for the user to ask. When in doubt, treat the
+  message as a question — a proposal costs one turn; an unwanted edit costs a
+  revert.
+- **Wait for an explicit go-ahead.** An action proposed or offered earlier stays
+  pending until the user clearly says to proceed — discussing it or deferring it
+  ("before we do that, ...") is not approval, and approval covers only the
+  action it names. When iterating, apply only the edits the current message asks
+  for, and check that the user is ready before starting anything still queued.
 - **Lead with the answer.** When the user asks a question, answer it in the
   first sentence. Provide reasoning and context after, not before. If a task is
   complete, say so — don't narrate what you did step by step unless the user
@@ -229,12 +249,13 @@ looking anywhere else. Print them in plain text in chat rather than through a
 clickable question prompt; save such prompts for a single quick blocking fork
 mid-execution.
 
-- **Groups, questions, options.** When the questions fall into natural themes,
-  group them under lettered headings (A, B, C, ...), each with a short blurb at
-  the top — don't force groups where none exist. Number questions with their
-  group letter (A1, A2, ..., B1, B2, ...), or plainly (1, 2, 3, ...) when there
-  are no groups. Give each question lettered options (a, b, c, ...), where (a)
-  is always the recommendation.
+- **Groups, questions, options.** Group questions under lettered headings (A, B,
+  C, ...), each with a short blurb at the top, when a large batch needs the
+  extra structure. Ungrouped is the default — don't group a short list
+  (single-question groups are allowed but discouraged). Number questions with
+  their group letter (A1, A2, ..., B1, B2, ...), or plainly (1, 2, 3, ...) when
+  there are no groups. Give each question lettered options (a, b, c, ...), where
+  (a) is always the recommendation.
 - **One decision per question.** Do not combine decisions unless their answers
   are structurally correlated — one answer clearly implies the others.
 - **Summary first.** Start each question with a one-sentence summary in italics,
