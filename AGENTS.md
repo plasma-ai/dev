@@ -32,6 +32,14 @@ below):
   state without modifying the working tree).
 - Leave all committing to the user. Make code changes, run tests, run
   pre-commit, but stop before committing.
+- **No session identifiers or tool footers in anything published.** Commit
+  messages end at the co-author trailer (`Co-Authored-By: ...`) — never append
+  session or conversation identifiers, links back into an agent harness, or
+  trailers of that kind (e.g. `Claude-Session:`) to commits, PR or issue bodies,
+  comments, release notes, or any committed file. Do not add "Generated with
+  ..." footers or tool badges to PRs or issues either; the co-author trailer is
+  the only attribution that belongs anywhere. Harness trailers found in existing
+  git history are a defect being scrubbed, not a pattern to imitate.
 - **Exception for fractal.** When running the `/fractal` skill or operating a
   fractal node, commit fractal's own setup/seed/config artifacts autonomously
   and without asking — `fractal init`'s output (`.fractal/` and the wiki
