@@ -11,6 +11,10 @@
       "Read",
       "Edit",
       "Write"
+    ],
+    "additionalDirectories": [
+      "/tmp",
+      "/private/tmp"
     ]
   },
   "env": {
