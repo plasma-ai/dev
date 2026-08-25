@@ -18,7 +18,8 @@
     "files.autoSave": "afterDelay",
     "files.trimTrailingWhitespace": true,
     "files.exclude": {
-        "**/__pycache__": true
+        "**/__pycache__": true,
+        ".playwright-mcp": true
     },
     // Terminal
     "terminal.integrated.initialHint": false,
