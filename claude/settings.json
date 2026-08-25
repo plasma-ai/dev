@@ -8,8 +8,9 @@
   "permissions": {
     "defaultMode": "bypassPermissions",
     "allow": [
-      "Edit(*.md)",
-      "Edit(*.py)"
+      "Read",
+      "Edit",
+      "Write"
     ]
   },
   "env": {
