@@ -286,6 +286,10 @@ mid-execution.
   their group letter (A1, A2, ..., B1, B2, ...), or plainly (1, 2, 3, ...) when
   there are no groups. Give each question lettered options (a, b, c, ...), where
   (a) is always the recommendation.
+- **Option layout.** List the options as dash items directly under the
+  question's context, one option per item — `- (a) ...`, `- (b) ...` — with a
+  blank line before the list and wrapped lines indented two spaces to sit under
+  the option text. The same shape applies in chat and in plan files.
 - **One decision per question.** Do not combine decisions unless their answers
   are structurally correlated — one answer clearly implies the others.
 - **Summary first.** Start each question with a one-sentence summary in italics,
