@@ -279,13 +279,15 @@ looking anywhere else. Print them in plain text in chat rather than through a
 clickable question prompt; save such prompts for a single quick blocking fork
 mid-execution.
 
+Lay the batch out so it can be scanned and answered quickly:
+
 - **Groups, questions, options.** Group questions under lettered headings (A, B,
   C, ...), each with a short blurb at the top, when a large batch needs the
   extra structure. Ungrouped is the default — don't group a short list
   (single-question groups are allowed but discouraged). Number questions with
   their group letter (A1, A2, ..., B1, B2, ...), or plainly (1, 2, 3, ...) when
   there are no groups. Give each question lettered options (a, b, c, ...), where
-  (a) is always the recommendation.
+  (a) is always the recommendation (with a short reason).
 - **Option layout.** List the options as dash items directly under the
   question's context, one option per item — `- (a) ...`, `- (b) ...` — with a
   blank line before the list and wrapped lines indented two spaces to sit under
@@ -298,6 +300,30 @@ mid-execution.
   decide without opening files or scrolling back.
 - **Scale down.** With one group, drop the group letter and blurb. With one
   question, keep just the italic summary, context, and lettered options.
+
+Ask about goals more than implementation. The user knows what the software
+should do and what they care about; the agent knows how to build it. A question
+offers the user a choice they can judge, and the agent turns the answer into the
+technical decisions it implies.
+
+- **Short, not packed.** Give each question only the context needed to decide.
+  To shorten, drop the least important point rather than packing several ideas
+  into one sentence.
+- **Plain words.** Describe technical things by what they do, not by what they
+  are called. A technical name may follow in parentheses so the user can
+  recognize it, but the question must still make sense with the parentheses
+  removed.
+- **Ask what before how.** Ask about things the user will notice: what the
+  program does, how it behaves when something goes wrong, what it costs, and
+  which of two competing goals matters more. When two approaches differ only in
+  ways the user would never notice, there is no question — pick one and say
+  which.
+- **Recommend, then ask.** Ask only when the user's answer could change what you
+  build. When a choice is small and easy to reverse, decide it and say what you
+  decided. Always provide a short reason with your recommendation.
+- **Re-read questions.** Re-read each question as someone who knows the product
+  but has never seen the code. Ensure that questions are lightweight, easy to
+  parse quickly, and do not require an intimate knowledge of implementation.
 
 In plans, record open decisions in a Questions section, usually the last
 section, and still print them in chat for the user to answer. Update the plan in
