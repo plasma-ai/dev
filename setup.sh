@@ -503,6 +503,7 @@ if [[ "$MACOS" == true ]] && [[ "$HEADLESS" == false ]]; then
         code --install-extension donjayamanne.python-extension-pack
         code --install-extension yzhang.markdown-all-in-one
         code --install-extension tamasfe.even-better-toml
+        code --install-extension repreng.csv
         code --install-extension james-yu.latex-workshop
         code --install-extension tecosaur.latex-utilities
         code --install-extension streetsidesoftware.code-spell-checker
@@ -526,6 +527,7 @@ if [[ "$MACOS" == true ]] && [[ "$HEADLESS" == false ]]; then
         cursor --install-extension donjayamanne.python-extension-pack
         cursor --install-extension yzhang.markdown-all-in-one
         cursor --install-extension tamasfe.even-better-toml
+        cursor --install-extension repreng.csv
         cursor --install-extension james-yu.latex-workshop
         cursor --install-extension tecosaur.latex-utilities
         cursor --install-extension streetsidesoftware.code-spell-checker
