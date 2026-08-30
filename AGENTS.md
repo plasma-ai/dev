@@ -79,10 +79,13 @@ superseded. Iterating on a plan — feedback rounds, rewrites, restructuring whi
 the plan is still being shaped — updates the file in place regardless of session
 or how substantial the edits are.
 
-After saving a new plan, print its full contents in the conversation so the user
-can review it inline. While iterating, print only the changed parts — the
-updated sections or new Decision lines — and re-print the whole plan only when
-the user asks or a rewrite touches most of the file.
+Do not print the plan body in the conversation — the user reads it from the
+file. After saving a new plan, print its path and use judgement about what else
+to show; usually a few sentences on the approach and the open questions. While
+iterating, do not repeat the summary or questions every turn — say in a line or
+two what changed, and print only questions or decision items that are new. Show
+the summary and questions again, or the full plan, when the user asks or at a
+natural checkpoint, such as when the plan has settled and is ready for approval.
 
 **Save early, update often.** Write the plan file to disk as soon as the first
 draft is ready — do not wait for user approval or iteration to complete. Update
