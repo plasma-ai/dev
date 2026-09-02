@@ -26,10 +26,14 @@ below):
 - **Never touch the staging area or stash.** Do not run `git add`, `git reset`,
   `git stash`, `git checkout -- <file>`, `git restore`, `git clean`, or any
   other command that stages, unstages, stashes, or discards changes. The user
-  uses the staging area to track approved work — modifying it destroys their
-  workflow. This applies even when debugging (e.g. do not stash to test original
-  code — use `git show HEAD:<file>` or `git diff HEAD` to inspect the original
-  state without modifying the working tree).
+  uses the staging area to separate earlier work from later edits — modifying it
+  destroys their workflow. This applies even when debugging (e.g. do not stash
+  to test original code — use `git show HEAD:<file>` or `git diff HEAD` to
+  inspect the original state without modifying the working tree).
+- **Expect the user to stage changes.** The user periodically stages work to
+  separate it from later edits. Treat newly staged changes as intentional. Do
+  not ask why they were staged or try to restore the previous staging state;
+  leave your new edits unstaged.
 - Leave all committing to the user. Make code changes, run tests, run
   pre-commit, but stop before committing.
 - **No session identifiers or tool footers in anything published.** Commit
