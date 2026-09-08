@@ -1,14 +1,21 @@
 # https://developers.openai.com/codex/config-reference
 
-model_reasoning_effort = "max"
-personality = "pragmatic"
+model_reasoning_effort = "xhigh"
 sandbox_mode = "danger-full-access"
+approval_policy = "never"
 file_opener = "cursor"
 
 [features]
 goals = true
 fast_mode = true
 memories = false
+
+[features.context_management]
+experimental_mode = true
+
+[features.multi_agent_v2]
+enabled = true
+max_concurrent_threads_per_session = 64
 
 [analytics]
 enabled = false
