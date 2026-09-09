@@ -1,6 +1,6 @@
 # https://developers.openai.com/codex/config-reference
 
-model_reasoning_effort = "xhigh"
+model_reasoning_effort = "max"
 sandbox_mode = "danger-full-access"
 approval_policy = "never"
 file_opener = "cursor"
