@@ -7,7 +7,7 @@ file_opener = "cursor"
 
 [features]
 goals = true
-fast_mode = true
+fast_mode = false
 memories = false
 
 [features.context_management]
