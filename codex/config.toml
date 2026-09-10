@@ -3,6 +3,7 @@
 model_reasoning_effort = "max"
 sandbox_mode = "danger-full-access"
 approval_policy = "never"
+file_opener = "cursor"
 
 [features]
 goals = true
