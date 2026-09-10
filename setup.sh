@@ -185,7 +185,10 @@ fi
 if [[ "$REPAIR" == false ]]; then
     echo "==> installing brew"
     if ! command -v brew &>/dev/null; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        # NONINTERACTIVE skips the installer's RETURN prompt but also makes its
+        # sudo check non-interactive (sudo -n), so cache credentials first
+        sudo -v
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     else
         echo "Reusing existing brew install; run 'brew update' to refresh"
     fi
@@ -196,6 +199,8 @@ if [[ ! -x "${BREW_PREFIX}/bin/brew" ]]; then
     exit 1
 fi
 eval "$("${BREW_PREFIX}"/bin/brew shellenv)"
+# skip brew's default confirmation prompt (ask mode) for the rest of the script
+export HOMEBREW_NO_ASK=1
 # add brew shellenv to .zprofile for non-interactive login shells
 if ! grep -q 'brew shellenv' "$HOME/.zprofile" 2>/dev/null; then
     (
@@ -239,7 +244,9 @@ if [[ "$REPAIR" == false ]]; then
     brew install awscli
     # install AI tools
     curl -fsSL https://claude.ai/install.sh | bash
-    curl -fsSL https://chatgpt.com/codex/install.sh | bash
+    # CODEX_NON_INTERACTIVE declines the installer's prompts, including its
+    # offer to start Codex, which breaks the script if accepted
+    curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 bash
     brew install opencode
 fi
 
