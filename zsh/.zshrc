@@ -425,6 +425,58 @@ archive () {
     fi
 }
 
+# print agentlink usage
+_agentlink_usage () {
+    cat <<USAGE
+Usage: agentlink [dir]
+
+Symlink shared agent config into the current directory.
+
+Arguments:
+    dir    Source directory (default: current directory)
+
+Options:
+    --help|-h    Show this help message
+USAGE
+}
+
+# link shared agent config into the current directory
+# absolute targets keep links independent of the dev repo's name
+agentlink () {
+    if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+        _agentlink_usage
+        return 0
+    fi
+    # resolve the optional source directory
+    local DIR="${1:-$(pwd)}"
+    if [[ ! -d "$DIR" ]]; then
+        echo "Error: invalid source directory: $DIR" >&2
+        return 1
+    fi
+    if [[ ! "$DIR" = /* ]]; then
+        DIR="$(cd "$DIR" && pwd)" || return 1
+    fi
+    # resolve each source and destination
+    local SOURCE DEST
+    for DEST in AGENTS.md CLAUDE.md .agents .claude .codex; do
+        case "$DEST" in
+            AGENTS.md | CLAUDE.md)
+                SOURCE="AGENTS.md"
+                ;;
+            *)
+                SOURCE="${DEST#.}"
+                ;;
+        esac
+        # preserve existing real files
+        if [[ -e "$DEST" && ! -L "$DEST" ]]; then
+            echo "skipping $DEST (exists and is not a symlink)"
+            continue
+        fi
+        ln -sfn "$DIR/$SOURCE" "$DEST" || return 1
+        echo "Linked $DEST -> $DIR/$SOURCE"
+    done
+}
+
 # Print agentconf usage
 _agentconf_usage () {
     cat <<USAGE

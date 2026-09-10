@@ -38,6 +38,11 @@ Personal branches may add additional directories as needed.
 `../AGENTS.md`, `../CLAUDE.md`, `../.agents`). Existing non-symlink files are
 left untouched.
 
+To create the same five links in the current directory, run
+`agentlink [<source-dir>]`. The source defaults to the current directory. For
+example, run `agentlink ~/plasma/dev` from a project to link its agent config to
+that dev repo. The function is defined in `zsh/.zshrc`.
+
 To symlink the agent config (`.agents/`, `.claude/`, `.codex/`) into a project,
 run `agentconf <project> [<dev-path>]` from the parent of `dev/` (or `agentconf`
 from inside the project). `<dev-path>` defaults to `../dev`. The function is
