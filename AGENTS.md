@@ -59,11 +59,11 @@ below):
 ### Plan Files
 
 Create every plan with the `plan` command (defined in `dev/zsh/.zshrc` and
-symlinked to `~/.zshrc`), which gets the UTC timestamp, writes the file in
-`$PLANS_DIR`, and seeds the title and author header for you:
+symlinked to `~/.zshrc`), which gets the UTC timestamp, writes the file in the
+selected plans directory, and seeds the title and author header for you:
 
 ```shell
-plan <short_descriptive_name> <agent>
+plan <short_descriptive_name> <agent> [--dir <path>]
 ```
 
 - `<short_descriptive_name>` uses underscores and no dashes, except an optional
@@ -71,12 +71,13 @@ plan <short_descriptive_name> <agent>
   `refactor_node_events-v2`); `<agent>` is the agent name with its model in
   parentheses, quoted since it contains spaces (e.g. `"Claude (Fable 5)"` or
   `"Codex (GPT-5.6)"`). The command prints the created path
-  (`$PLANS_DIR/<ISO 8601 UTC timestamp>-<name>.md`) — write your plan into that
+  (`<directory>/<ISO 8601 UTC timestamp>-<name>.md`) — write your plan into that
   file. Do not hand-compute timestamps or use the auto-generated plan-mode
   filename.
-- `$PLANS_DIR` defaults to the `scratch/plans` directory beside the `dev` repo;
-  override it to point plans elsewhere. Plans from all agents share
-  `$PLANS_DIR`.
+- `$PLANS_DIR` defaults to the `scratch/plans` directory beside the `dev` repo
+  that supplies `~/.zshrc`. Set it in your environment to change the default.
+  Pass `--dir <path>` or `--dir=<path>` to override the directory for one call
+  without changing `$PLANS_DIR`.
 - The command seeds the file with a title and author header. The seeded title is
   just the name with underscores turned into spaces — rewrite it into a proper
   descriptive title (e.g. `# Refactor Node Event Handling`).

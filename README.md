@@ -44,9 +44,10 @@ from inside the project). `<dev-path>` defaults to `../dev`. The function is
 defined in `zsh/.zshrc`.
 
 The `plan` command (also defined in `zsh/.zshrc`) writes timestamped plan files
-to `$PLANS_DIR`, which defaults to `scratch/plans` beside the `dev` repo
-(created automatically if missing). Set `PLANS_DIR` in your environment to put
-plans elsewhere.
+to `$PLANS_DIR`, which defaults to `scratch/plans` beside the `dev` repo that
+supplies `~/.zshrc`. The directory is created if missing. Set `PLANS_DIR` in
+your environment to change the default. Pass `--dir <path>` or `--dir=<path>` to
+override it for one call without changing `$PLANS_DIR`.
 
 ## Setup
 

@@ -459,42 +459,77 @@ agentconf () {
 # Print plan usage
 _plan_usage () {
     cat <<USAGE
-Usage: plan <name> <author>
+Usage: plan <name> <author> [options]
 
-Initialize a timestamped plan file in \$PLANS_DIR.
+Initialize a timestamped plan file.
 
 Arguments:
     name      Short descriptive name
     author    Plan author with model (e.g. "Claude (Fable 5)")
+
+Options:
+    --dir=<path>    Plans directory for this call (default: \$PLANS_DIR)
+    --help|-h       Show this help message
+
+--dir also accepts a space-separated value (--dir <path>).
 USAGE
 }
 
-# Initialize a timestamped plan file in $PLANS_DIR
+# Initialize a timestamped plan file
 plan () {
-    # Name is the first positional arg; author the second.
-    # Writes "$PLANS_DIR/<UTC timestamp>-<name>.md" with a title and author
+    # Name is the first positional arg; author the second. --dir overrides
+    # $PLANS_DIR for this call.
+    # Writes "<directory>/<UTC timestamp>-<name>.md" with a title and author
     # header, then prints the path.
-    # Show usage on --help
-    if [[ "$1" == "--help" || "$1" == "-h" ]]; then
-        _plan_usage
-        return 0
-    fi
+
+    # Parse options (show usage on --help)
+    ARGS=()
+    PLAN_DIR="$PLANS_DIR"
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --help | -h) _plan_usage; return 0 ;;
+            --dir | --dir=*)
+                if [[ "$1" == *=* ]]; then
+                    PLAN_DIR="${1#*=}"
+                elif [[ $# -ge 2 && "$2" != -* ]]; then
+                    PLAN_DIR="$2"
+                    shift
+                else
+                    echo "Error: --dir requires a value" >&2
+                    _plan_usage >&2
+                    return 1
+                fi
+                if [[ -z "$PLAN_DIR" ]]; then
+                    echo "Error: --dir requires a value" >&2
+                    _plan_usage >&2
+                    return 1
+                fi
+                ;;
+            -*)
+                echo "Error: unknown option: $1" >&2
+                _plan_usage >&2
+                return 1
+                ;;
+            *) ARGS+=("$1") ;;
+        esac
+        shift
+    done
     # Require name and author
-    NAME="$1"
-    AUTHOR="$2"
-    if [[ -z "$NAME" || -z "$AUTHOR" ]]; then
+    NAME="${ARGS[1]}"
+    AUTHOR="${ARGS[2]}"
+    if [[ ${#ARGS[@]} -ne 2 || -z "$NAME" || -z "$AUTHOR" ]]; then
         _plan_usage >&2
         return 1
     fi
-    # Require PLANS_DIR
-    if [[ -z "$PLANS_DIR" ]]; then
+    # Require a plans directory
+    if [[ -z "$PLAN_DIR" ]]; then
         echo "PLANS_DIR is not set" >&2
         return 1
     fi
     # Build the timestamped plan path
     NOW="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-    FILE="$PLANS_DIR/$NOW-$NAME.md"
-    mkdir -p "$PLANS_DIR"
+    FILE="$PLAN_DIR/$NOW-$NAME.md"
+    mkdir -p -- "$PLAN_DIR" || return 1
     # Derive a human title from the name (underscores -> spaces)
     TITLE="${NAME//_/ }"
     # Write the title and author header
@@ -502,7 +537,7 @@ plan () {
         echo "# $TITLE"
         echo ""
         echo "Written by: $AUTHOR"
-    } > "$FILE"
+    } > "$FILE" || return 1
     # Print the created path
     echo "$FILE"
 }
