@@ -396,11 +396,9 @@ if [[ -d .git && -d agents ]]; then
 fi
 git config --global user.useConfigOnly true
 
-# scope git identity to this dev repo's workspace via a conditional
-# include, so every repo under the workspace uses it and each workspace
-# (e.g. plasma vs plasma-internal) keeps its own; no global identity is
-# set, so with user.useConfigOnly a repo outside any configured workspace
-# must declare its own name/email rather than fall back to a wrong default
+# scope git identity to this workspace; user.useConfigOnly makes
+# repos outside configured workspaces require an explicit identity,
+# preventing cross-account commits
 WORKSPACE_DIR="$(cd .. && pwd)"
 WORKSPACE_GITCONFIG="$HOME/.config/git/$(basename "$WORKSPACE_DIR").gitconfig"
 mkdir -p "$(dirname "$WORKSPACE_GITCONFIG")"
@@ -475,21 +473,8 @@ fi
 
 # ------ agent config
 
-# link the shared agent config into the parent workspace. Absolute targets keep
-# this working whatever the repo is named; existing real files are left untouched.
-agentlink() {
-    if [[ -e "$2" && ! -L "$2" ]]; then
-        echo "skipping $2 (exists and is not a symlink)"
-        return
-    fi
-    ln -sfn "$1" "$2"
-    echo "Linked $2 -> $1"
-}
-agentlink "$(pwd)/AGENTS.md" ../AGENTS.md
-agentlink "$(pwd)/AGENTS.md" ../CLAUDE.md
-agentlink "$(pwd)/agents" ../.agents
-agentlink "$(pwd)/claude" ../.claude
-agentlink "$(pwd)/codex" ../.codex
+# load agentlink from .zshrc and link the shared agent config into the parent
+zsh -fc 'source ~/.zshrc && cd .. && agentlink "$1"' -- "$SCRIPT_DIR"
 
 # ------ editors
 
