@@ -83,8 +83,8 @@ chmod +x ./dev/setup.sh
 
 Run `./dev/setup.sh --help` to see all options.
 
-You'll be prompted for input at a few points. Most prompts should be accepted,
-**except** when asked to modify the `PATH` variable by changing `.zshrc`.
+The script does not prompt for input, apart from password prompts from `sudo`
+and `chsh`.
 
 Following installation, open iTerm2 and navigate via the menu bar to
 `iTerm2 > Settings > General > Settings`. Select
