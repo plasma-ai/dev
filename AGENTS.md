@@ -56,6 +56,23 @@ below):
   them. Ordinary project work in the user's main worktree still follows the
   rules above.
 
+### Workspace Layout
+
+The workspace root holds two directories alongside the repos:
+
+- **`workspace/<repo_name>/` is the scratch space for `<repo_name>`.** Put
+  unversioned working files there — one-off scripts, experiment outputs,
+  downloaded data, and notes — outside the repo checkout. Create the directory
+  if needed, and keep it organized as you work. Treat existing contents as
+  durable working data. Ask the user before deleting anything.
+- **`worktrees/` holds implementation worktrees.** Branches intended for a pull
+  request (PR) must use a worktree. Worktrees are optional for other branches.
+  Create the worktree at `worktrees/<repo_name>-<short_name>` before starting,
+  and do all work for that branch there. To create a new branch and worktree,
+  run `git worktree add ../worktrees/<repo_name>-<short_name> -b <branch>` from
+  the repo's main checkout. Keep the main checkout on the user's own branch and
+  preserve their staged and unstaged work. Never develop a PR branch in it.
+
 ### Plan Files
 
 Create every plan with the `plan` command (defined in `dev/zsh/.zshrc` and
