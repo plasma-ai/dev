@@ -1,14 +1,24 @@
 {
   "scopeName": "inline-yaml.injection",
-  "injectionSelector": "R:string.quoted.multi.python, R:string.quoted.docstring.multi.python",
+  "comment": "The `- meta.yaml-doc.python` clause stops the injection from re-entering inside its own block.",
+  "injectionSelector": "R:(string.quoted.multi.python | string.quoted.docstring.multi.python) - meta.yaml-doc.python",
   "patterns": [
     {
-      "begin": "(-{3})[ \\t]*\\n",
-      "end": "(-{3})(?=[ \\t]*\\n)",
+      "comment": "The first line that is only `---` (the same test plasma.util.config uses to read docstring YAML) opens the block, and the rule lasts until the string closes so no later `---` line can open another. Ending at any line holding triple quotes keeps an unclosed block from swallowing the rest of the file: the string's own end is never checked while this rule is open.",
+      "name": "meta.yaml-doc.python",
+      "begin": "^[ \\t]*(---)[ \\t]*$",
+      "end": "^(?=.*(?:\"\"\"|'''))",
       "beginCaptures": {"1": {"name": "punctuation.definition.block.yaml.begin"}},
-      "endCaptures": {"1": {"name": "punctuation.definition.block.yaml.end"}},
-      "contentName": "meta.embedded.block.yaml",
-      "patterns": [{"include": "source.yaml"}]
+      "patterns": [
+        {
+          "comment": "`\\G` only matches right after the opening delimiter, so this runs once: YAML until the next `---`-only line, or until the string closes if there is none.",
+          "begin": "\\G",
+          "end": "^[ \\t]*(---)[ \\t]*$|^(?=.*(?:\"\"\"|'''))",
+          "endCaptures": {"1": {"name": "punctuation.definition.block.yaml.end"}},
+          "contentName": "meta.embedded.block.yaml",
+          "patterns": [{"include": "source.yaml"}]
+        }
+      ]
     }
   ]
 }
