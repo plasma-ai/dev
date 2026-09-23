@@ -360,26 +360,34 @@ Lay the batch out so it can be scanned and answered quickly:
 Ask about goals more than implementation. The user knows what the software
 should do and what they care about; the agent knows how to build it. A question
 offers the user a choice they can judge, and the agent turns the answer into the
-technical decisions it implies.
+technical decisions it implies. The test: the user should be able to answer
+knowing only what the software does, rather than how it is built.
 
-- **Short, not packed.** Give each question only the context needed to decide.
-  To shorten, drop the least important point rather than packing several ideas
-  into one sentence.
+- **Name the outcome, not the mechanism.** Ask about the thing the user will see
+  or pay for: what the output contains, what happens when something goes wrong,
+  what it costs, which goal wins. The mechanism that delivers each outcome stays
+  in the plan's Design section, keyed to the question number, so the question
+  never has to explain it.
+- **A few sentences of context.** What happens today, why it matters, and what
+  the choice changes. Anything more belongs in the plan; a reader who wants it
+  opens the plan.
+- **Options as outcomes.** Each option is one or two sentences: what the user
+  gets and what is the cost. A few options, (a) always the recommendation, with
+  the reason given in the user's terms, not your terms or terms from code.
 - **Plain words.** Describe technical things by what they do, not by what they
   are called. A technical name may follow in parentheses so the user can
   recognize it, but the question must still make sense with the parentheses
-  removed.
-- **Ask what before how.** Ask about things the user will notice: what the
-  program does, how it behaves when something goes wrong, what it costs, and
-  which of two competing goals matters more. When two approaches differ only in
-  ways the user would never notice, there is no question — pick one and say
-  which.
+  removed. No identifiers, flags, file paths, or function names in a question
+  unless they are central to the question.
+- **Short, not packed.** To shorten, drop the least important point rather than
+  packing several ideas into one sentence.
 - **Recommend, then ask.** Ask only when the user's answer could change what you
-  build. When a choice is small and easy to reverse, decide it and say what you
-  decided. Always provide a short reason with your recommendation.
-- **Re-read questions.** Re-read each question as someone who knows the product
-  but has never seen the code. Ensure that questions are lightweight, easy to
-  parse quickly, and do not require an intimate knowledge of implementation.
+  build. When a choice is small and easy to reverse, or when two approaches
+  differ only in ways the user would never notice, there is no question — pick
+  the right one and say which.
+- **Re-read as the user.** Re-read each question as someone who knows the
+  product but has never seen the code. If answering it needs the code, rewrite
+  it; if it reads dense, cut context, not grammar.
 
 In plans, record open decisions in a Questions section, usually the last
 section, and still print them in chat for the user to answer. Update the plan in
