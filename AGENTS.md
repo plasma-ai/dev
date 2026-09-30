@@ -25,21 +25,35 @@ below):
 
 ### Git Workflow
 
-- **Do not create git commits unless explicitly asked.** Never auto-commit
-  during implementations.
-- **Never touch the staging area or stash.** Do not run `git add`, `git reset`,
-  `git stash`, `git checkout -- <file>`, `git restore`, `git clean`, or any
-  other command that stages, unstages, stashes, or discards changes. The user
-  uses the staging area to separate earlier work from later edits — modifying it
-  destroys their workflow. This applies even when debugging (e.g. do not stash
-  to test original code — use `git show HEAD:<file>` or `git diff HEAD` to
-  inspect the original state without modifying the working tree).
-- **Expect the user to stage changes.** The user periodically stages work to
-  separate it from later edits. Treat newly staged changes as intentional. Do
-  not ask why they were staged or try to restore the previous staging state;
-  leave your new edits unstaged.
-- Leave all committing to the user. Make code changes, run tests, run
-  pre-commit, but stop before committing.
+Infer the workflow and authorized Git actions from the user's instructions and
+the conversation. We provide some common workflows, but tasks may combine them
+or follow a different arrangement. The user does not need to name a workflow.
+Follow the agreed scope, and if it is unclear what workflow(s) you should be
+adopting, it is always better to ask. Once a workflow is adopted, assume that it
+remains in effect within that scope until the user asks to change it.
+
+- **The user may review as work proceeds.** This is common for smaller tasks or
+  consequential changes that need close review. The user stages edits to mark
+  them reviewed, then reviews new unstaged edits separately. Leave your changes
+  unstaged. Do not stage, unstage, stash, discard, commit, or push unless the
+  user authorizes that action. Treat newly staged changes as intentional; do not
+  ask why they were staged or restore an earlier staging state. Only deviate
+  when the user has requested you to do so explicitly.
+- **The user may authorize commits and pushes.** Work directly in the repo's
+  main checkout on the agreed branch. Stage, commit, and push the task's changes
+  as you go. Before the first push, ask for permission unless the user has
+  already explicitly authorized it. Ask if the scope of that permission is
+  unclear. Use standing authorization within the agreed task scope without
+  asking for each operation.
+- **The user may ask for work delivered through a pull request.** Use a separate
+  implementation worktree for the PR branch. A request to open or update a PR
+  authorizes the staging, commits, and pushes needed for that PR. Keep the
+  user's main checkout and its staged and unstaged work intact. Merge only when
+  authorized.
+- **Preserve work outside your task.** Git authorization covers the agreed work.
+  Do not include unrelated changes in commits or disturb the user's work outside
+  that scope. Prefer `git show HEAD:<file>` or `git diff HEAD` to inspect
+  earlier code without disturbing the working tree or staging area.
 - **No session identifiers or tool footers in anything published.** Commit
   messages end at the co-author trailer (`Co-Authored-By: ...`) — never append
   session or conversation identifiers, links back into an agent harness, or
@@ -47,14 +61,7 @@ below):
   comments, release notes, or any committed file. Do not add "Generated with
   ..." footers or tool badges to PRs or issues either; the co-author trailer is
   the only attribution that belongs anywhere. Harness trailers found in existing
-  git history are a defect being scrubbed, not a pattern to imitate.
-- **Exception for fractal.** When running the `/fractal` skill or operating a
-  fractal node, commit fractal's own setup/seed/config artifacts autonomously
-  and without asking — `fractal init`'s output (`.fractal/` and the wiki
-  scaffold it creates), the node seed, and the baseline and child config commits
-  the fractal skill instructs you to make. Never ask the user whether to commit
-  them. Ordinary project work in the user's main worktree still follows the
-  rules above.
+  git history are defects, not a pattern to imitate.
 
 ### Workspace Layout
 
