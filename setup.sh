@@ -406,8 +406,15 @@ echo "# $WORKSPACE_DIR" >"$WORKSPACE_GITCONFIG"
 git config --file "$WORKSPACE_GITCONFIG" user.name "$GIT_USER"
 git config --file "$WORKSPACE_GITCONFIG" user.email "$GIT_EMAIL"
 git config --file "$WORKSPACE_GITCONFIG" github.user "$GITHUB_USER"
-# pin the HTTPS credential username so fetch/push hit this workspace's GitHub account
-git config --file "$WORKSPACE_GITCONFIG" "credential.https://github.com.username" "$GITHUB_USER"
+# use this workspace's gh token so fetch/push hit this workspace's GitHub
+# account; the empty helper drops inherited helpers (e.g. osxkeychain), whose
+# saved tokens `gh auth login` erases when logging in to another account
+git config --file "$WORKSPACE_GITCONFIG" "credential.https://github.com.helper" ""
+git config --file "$WORKSPACE_GITCONFIG" --add "credential.https://github.com.helper" "!f() {
+    test \"\$1\" = get || return 0
+    echo username=$GITHUB_USER
+    echo \"password=\$(gh auth token --user $GITHUB_USER)\"
+}; f"
 # use a dedicated SSH key so fetch/push hit this workspace's GitHub account
 if [[ -n "$SSH_KEY" ]]; then
     git config --file "$WORKSPACE_GITCONFIG" core.sshCommand "ssh -i $SSH_KEY -o IdentitiesOnly=yes"

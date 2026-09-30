@@ -12,6 +12,9 @@
       "Edit",
       "Write"
     ],
+    "deny": [
+      "SendFeedback"
+    ],
     "additionalDirectories": [
       "/tmp",
       "/private/tmp"
