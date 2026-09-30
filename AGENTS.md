@@ -77,8 +77,9 @@ The workspace root holds two directories alongside the repos:
   Create the worktree at `worktrees/<repo_name>-<short_name>` before starting,
   and do all work for that branch there. To create a new branch and worktree,
   run `git worktree add ../worktrees/<repo_name>-<short_name> -b <branch>` from
-  the repo's main checkout. Keep the main checkout on the user's own branch and
-  preserve their staged and unstaged work. Never develop a PR branch in it.
+  the repo's main checkout. For PR work, keep the main checkout on the user's
+  own branch and preserve their staged and unstaged work. Never develop a PR
+  branch in it.
 
 ### Plan Files
 
