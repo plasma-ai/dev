@@ -250,6 +250,11 @@ if [[ "$REPAIR" == false ]]; then
     brew install opencode
 fi
 
+# install Mac App Store CLI
+if [[ "$MACOS" == true ]] && [[ "$REPAIR" == false ]]; then
+    brew install mas
+fi
+
 # install macOS desktop apps
 if [[ "$MACOS" == true ]] && [[ "$HEADLESS" == false ]] && [[ "$REPAIR" == false ]]; then
     # install terminals
