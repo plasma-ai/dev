@@ -25,6 +25,7 @@ dev/
 ├── git/            # Global gitignore
 ├── ghostty/        # Ghostty terminal config
 ├── iterm/          # iTerm2 settings
+├── tmux/           # tmux config
 ├── starship/       # Starship prompt config
 ├── zsh/            # Zsh configuration
 ├── setup.sh        # Machine setup script

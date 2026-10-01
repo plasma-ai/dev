@@ -361,6 +361,11 @@ mkdir -p ~/.config/ghostty
 ln -sfn "$(pwd)/ghostty/config" ~/.config/ghostty/config
 echo "Linked ~/.config/ghostty/config -> ghostty/config"
 
+# symlink tmux config
+echo "==> configuring tmux"
+ln -sfn "$(pwd)/tmux/.tmux.conf" ~/.tmux.conf
+echo "Linked ~/.tmux.conf -> tmux/.tmux.conf"
+
 # ------ iterm
 
 if [[ "$MACOS" == true && "$HEADLESS" == false ]]; then
