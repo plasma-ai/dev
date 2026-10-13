@@ -5,11 +5,13 @@
   "fastMode": true,
   "alwaysThinkingEnabled": true,
   "autoMemoryEnabled": false,
+  "feedbackDrafts": "off",
   "permissions": {
     "defaultMode": "bypassPermissions",
     "allow": [
-      "Read",
+      "Bash",
       "Edit",
+      "Read",
       "Write"
     ],
     "deny": [
@@ -23,6 +25,10 @@
   "env": {
     "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1",
     "CLAUDE_CODE_PLUGIN_PREFER_HTTPS": "1",
-    "CLAUDE_CODE_ENABLE_TELEMETRY": "0"
+    "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "",
+    "DISABLE_FEEDBACK_COMMAND": "1",
+    "DISABLE_TELEMETRY": "1",
+    "DISABLE_ERROR_REPORTING": "1"
   }
 }
