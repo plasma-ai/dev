@@ -507,6 +507,7 @@ if [[ "$MACOS" == true ]] && [[ "$HEADLESS" == false ]]; then
         done
     fi
     if [[ "$REPAIR" == false ]] && command -v code &>/dev/null; then
+        code --install-extension ms-vscode-remote.remote-ssh
         code --install-extension github.vscode-pull-request-github
         code --install-extension ms-vsliveshare.vsliveshare
         code --install-extension donjayamanne.python-extension-pack
@@ -532,6 +533,7 @@ if [[ "$MACOS" == true ]] && [[ "$HEADLESS" == false ]]; then
         done
     fi
     if [[ "$REPAIR" == false ]] && command -v cursor &>/dev/null; then
+        cursor --install-extension anysphere.remote-ssh
         cursor --install-extension github.vscode-pull-request-github
         cursor --install-extension donjayamanne.python-extension-pack
         cursor --install-extension yzhang.markdown-all-in-one
