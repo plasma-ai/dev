@@ -88,5 +88,9 @@
     ],
     "[latex]": {
         "editor.wordWrap": "on"
+    },
+    // SSH
+    "remote.SSH.remotePlatform": {
+        "plasma": "macOS"
     }
 }
