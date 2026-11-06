@@ -4,6 +4,8 @@
 <dict>
 	<key>AlternateMouseScroll</key>
 	<true/>
+	<key>ClaudeCodeWorkgroupUpsellSuppressed</key>
+	<true/>
 	<key>Default Bookmark Guid</key>
 	<string>C78F8A9C-BBEA-4BD4-9468-7A0E05EFADEF</string>
 	<key>DefaultTabBarHeight</key>
@@ -12,6 +14,8 @@
 	<false/>
 	<key>DisableTransparencyForKeyWindow</key>
 	<false/>
+	<key>EnableAPIServer</key>
+	<true/>
 	<key>EnableDivisionView</key>
 	<false/>
 	<key>HapticFeedbackForEsc</key>
@@ -456,6 +460,10 @@
 	<real>0.34863696808510641</real>
 	<key>TabStyleWithAutomaticOption</key>
 	<integer>5</integer>
+	<key>ToolbeltTools</key>
+	<array>
+		<string>Session Status</string>
+	</array>
 	<key>UseBorder</key>
 	<false/>
 	<key>VisualIndicatorForEsc</key>
