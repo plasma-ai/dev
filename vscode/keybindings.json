@@ -12,5 +12,10 @@
         "key": "cmd+y",
         "command": "workbench.action.focusActiveEditorGroup",
         "when": "terminalFocus"
+    },
+    {
+        "key": "shift+cmd+b",
+        "command": "latex-workshop.build",
+        "when": "editorLangId == latex"
     }
 ]

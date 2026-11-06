@@ -36,5 +36,10 @@
         "key": "shift+cmd+l",
         "command": "-notebook.selectAllFindMatches",
         "when": "config.notebook.multiCursor.enabled && notebookFindWidgetFocused || config.notebook.multiCursor.enabled && notebookCellEditorFocused && activeEditor == 'workbench.editor.notebook'"
+    },
+    {
+        "key": "shift+cmd+b",
+        "command": "latex-workshop.build",
+        "when": "editorLangId == latex"
     }
 ]
