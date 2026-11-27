@@ -222,6 +222,9 @@ and recipes for common tasks.
   pattern changes, or you discover an undocumented one worth recording, update
   the corresponding page per `patterns/AGENTS.md`, then run `wiki update` and
   `wiki lint`.
+- **Record an exception where it is made.** A repository that departs from a
+  pattern on purpose records the exception in its own `AGENTS.md`, or in a
+  comment at the site when one site is affected; the wiki lists no exceptions.
 
 ## Templates
 
